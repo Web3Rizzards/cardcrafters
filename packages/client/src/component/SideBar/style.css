@@ -1,0 +1,11 @@
+.button {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 10px 24px;
+    gap: 10px;
+    background: #F8F8F8;
+    border-bottom: 4px solid #616161;
+    border-radius: 8px;
+    cursor: pointer;
+}

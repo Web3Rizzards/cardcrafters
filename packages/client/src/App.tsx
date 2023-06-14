@@ -1,3 +1,4 @@
+import Button from "./component/Button.tsx";
 import { useComponentValue } from "@latticexyz/react";
 import { useMUD } from "./MUDContext";
 
@@ -26,4 +27,5 @@ export const App = () => {
       </button>
     </>
   );
+  // return <Button onClick={() => {}}>Hello</Button>;
 };

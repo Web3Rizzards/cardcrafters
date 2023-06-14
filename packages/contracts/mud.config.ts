@@ -2,6 +2,10 @@ import { mudConfig } from "@latticexyz/world/register";
 
 export default mudConfig({
   tables: {
+    Counter: {
+      keySchema: {},
+      schema: "uint32",
+    },
     Card: {
       // Key for the card is the name / prompt
       schema: {
