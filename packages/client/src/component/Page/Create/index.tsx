@@ -49,8 +49,6 @@ export const Create: React.FC<Props> = (props) => {
                     console.log("promptTextarea.value: ", value)
                     setState({ ...state, stage: { case: 'generating', input: value } })
                   }}
-
-                // disabled={promptTextarea.props.value.trim() === ""}
                 >Submit</button>
               </div>
             )
