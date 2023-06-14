@@ -2,25 +2,37 @@ import { mudConfig } from "@latticexyz/world/register";
 
 export default mudConfig({
   tables: {
-    Counter: {
-      keySchema: {},
-      schema: "uint32",
-    },
-    Ability: {
-      keySchema: {},
-      schema: {
-        type: "int32",
-        value: "int32",
-      },
-    },
     Card: {
-      keySchema: {},
+      // Key for the card is the name / prompt
       schema: {
-        attack: "int32",
-        health: "int32",
-        cost: "int32",
-        ability: Ability,
+        max_attack: "uint32",
+        attack: "uint32",
+        max_health: "uint32",
+        health: "uint32",
+        cost: "uint32",
+        ability_type: "AbilityType",
+        ability_value: "uint32",
+        creator: "address",
       },
     },
+    Game: {
+      keySchema: {},
+      schema: {
+        player1: "address",
+        player2: "address",
+        round: "uint32",
+        turn: "uint8",
+        start_time: "uint64",
+      },
+    },
+    Player: {
+      schema: {
+        health: "uint32",
+        mana: "uint32",
+      },
+    },
+  },
+  enums: {
+    AbilityType: ["HEAL", "AREA_ATTACK", "INSPIRE", "WEAKEN"],
   },
 });

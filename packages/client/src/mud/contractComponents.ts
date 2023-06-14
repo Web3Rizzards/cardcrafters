@@ -5,12 +5,19 @@ import { defineComponent, Type as RecsType, World } from "@latticexyz/recs";
 
 export function defineContractComponents(world: World) {
   return {
-    Counter: (() => {
-      const tableId = new TableId("", "Counter");
+    Card: (() => {
+      const tableId = new TableId("", "Card");
       return defineComponent(
         world,
         {
-          value: RecsType.Number,
+          max_attack: RecsType.Number,
+          attack: RecsType.Number,
+          max_health: RecsType.Number,
+          health: RecsType.Number,
+          cost: RecsType.Number,
+          ability_type: RecsType.Number,
+          ability_value: RecsType.Number,
+          creator: RecsType.String,
         },
         {
           metadata: {
@@ -20,16 +27,32 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
-    Card: (() => {
-      const tableId = new TableId("", "Card");
+    Game: (() => {
+      const tableId = new TableId("", "Game");
       return defineComponent(
         world,
         {
-          attack: RecsType.Number,
+          player1: RecsType.String,
+          player2: RecsType.String,
+          round: RecsType.Number,
+          turn: RecsType.Number,
+          start_time: RecsType.BigInt,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    Player: (() => {
+      const tableId = new TableId("", "Player");
+      return defineComponent(
+        world,
+        {
           health: RecsType.Number,
-          cost: RecsType.Number,
-          ability: RecsType.String,
-          ability_value: RecsType.Number,
+          mana: RecsType.Number,
         },
         {
           metadata: {
