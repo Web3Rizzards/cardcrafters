@@ -4,7 +4,16 @@ init()
 
 from vertexai.preview.language_models import TextGenerationModel
 
-temperature = 0.2
+temperature = 0.6
+
+parameters = {
+    "temperature": temperature,
+    "max_output_tokens": 256,
+    "top_p": 0.8,
+    "top_k": 40,
+}
+
+model = TextGenerationModel.from_pretrained("text-bison")
 
 prelude = """
 You are an assistant for designing cards for a deckbuilding game. 
@@ -23,28 +32,26 @@ When a player's health reaches 0, they lose the game.
 """.strip()
 
 
-def makeCreatureCard() -> None:
-    model = TextGenerationModel.from_pretrained("text-bison")
-    parameters = {
-        "temperature": temperature,
-        "max_output_tokens": 256,
-        "top_p": 0.8,
-        "top_k": 40,
-    }
+def makeCreatureCardName(theme: str) -> str:
     response = model.predict(
         f"""
 {prelude}
 
-Design a new creature card based on the theme "giant killer space alien invasion robots with magical powers". The card ability should be interesting and thematic. Reply in EXACTLY the following JSON format:
-
+Design the name for a new creature card with the theme "{theme}". Reply with JUST the card name.
 ```
-{{ 
-  "name": string
-  "cost": number
-  "attack": number
-  "toughness": number
-  "ability": string
-}}
+  """.strip(),
+        **parameters,
+    )
+
+    return response
+
+
+def makeCreatureCardAbility(theme: str, name: str, specialization: str) -> str:
+    response = model.predict(
+        f"""
+{prelude}
+
+Design the ability of a new creature card with the theme "{theme}" with the name "{name}". The ability should be {specialization}. Reply with JUST the one-sentence ability.
 ```
   """.strip(),
         **parameters,
@@ -54,4 +61,6 @@ Design a new creature card based on the theme "giant killer space alien invasion
 
 
 if __name__ == "__main__":
-    makeCreatureCard()
+    theme = "sneaky robot pirates"
+    name = makeCreatureCardName(theme)
+    ability = makeCreatureCardAbility(theme, name, "attack related")
