@@ -1,4 +1,5 @@
 import './card.css'
+import crypto_bro_image from '../public/crypto_bro.png'
 
 export type Card = {
   name: string;
@@ -16,7 +17,7 @@ export const renderCard = (card: Card): JSX.Element => (
         <div className="card-name">{card.name}</div>
         <div className="card-cost">{card.cost}</div>
       </div>
-      <br/>
+      <br />
       <div className="card-image">
         <img src={card.image} alt="CARD IMAGE"></img>
       </div>
@@ -30,3 +31,21 @@ export const renderCard = (card: Card): JSX.Element => (
     </div>
   </div>
 )
+
+export const example1: Card = {
+  name: "Crypto Bro #1",
+  cost: 1,
+  image: crypto_bro_image,
+  ability: "Inspire 2",
+  attack: 1,
+  health: 1,
+}
+
+export const example2: Card = {
+  name: "Crypto Bro #2",
+  cost: 1,
+  image: crypto_bro_image,
+  ability: "Inspire 2",
+  attack: 1,
+  health: 1,
+}

@@ -8,8 +8,6 @@ export type Props = {
 
 export const Page: React.FC<Props> = (props) => {
   console.log("rendering page")
-  console.log("props.name:", props.name)
-  console.log("props.children:", props.children)
   return (
     <div className={['page', props.name].join(' ')}>
       <div className='page-title'>{props.name}</div>
