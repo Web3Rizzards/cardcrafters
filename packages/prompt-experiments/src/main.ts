@@ -12,19 +12,21 @@ const client = new aiplatform.PredictionServiceClient({
 })
 
 async function main(): Promise<void> {
-  // let result = await client.predict({
-  //   // instances: [{stringValue: "hello"}],
-  // })
-  let result = await client.predict(
-    {
-      instances: [{ "stringValue": "hello" }],
-    },
-    {
-    }
-  )
-  console.log("result: ", result)
+  
 
-  console.log("done")
+  // // let result = await client.predict({
+  // //   // instances: [{stringValue: "hello"}],
+  // // })
+  // let result = await client.predict(
+  //   {
+  //     instances: [{ "stringValue": "hello" }],
+  //   },
+  //   {
+  //   }
+  // )
+  // console.log("result: ", result)
+
+  // console.log("done")
 }
 
 main()
