@@ -38,11 +38,57 @@ export function createSystemCalls(
     await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
     return getComponentValue(Counter, singletonEntity);
   };
+
+  // end turn
+  const endTurn = async () => {
+    const tx = await worldSend("endTurn", []);
+    await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
+    return getComponentValue(Counter, singletonEntity);
+  };
+
+  // forfeit
+  const forfeit = async () => {
+    const tx = await worldSend("forfeit", []);
+    await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
+    return getComponentValue(Counter, singletonEntity);
+  };
+
+  // attack
+  const attack = async (
+    boardId: number,
+    opponent: `0x${string}`,
+    targetId: number
+  ) => {
+    const tx = await worldSend("attackCard", [boardId, opponent, targetId]);
+    await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
+    return getComponentValue(Counter, singletonEntity);
+  };
+
+  // attackPlayer
+  // boardId = selected player's card
+  const attackPlayer = async (boardId: number, opponent: `0x${string}`) => {
+    const tx = await worldSend("attackPlayer", [boardId, opponent]);
+    await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
+    return getComponentValue(Counter, singletonEntity);
+  };
+
+  // forfeitOpponent
+  const forfeitOpponent = async () => {
+    const tx = await worldSend("forfeitOpponent", []);
+    await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
+    return getComponentValue(Counter, singletonEntity);
+  };
+
   return {
     createCard,
     increment,
     joinPlayer1,
     joinPlayer2,
     summonCard,
+    endTurn,
+    attack,
+    attackPlayer,
+    forfeit,
+    forfeitOpponent,
   };
 }
