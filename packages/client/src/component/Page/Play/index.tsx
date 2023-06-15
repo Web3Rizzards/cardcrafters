@@ -127,22 +127,20 @@ export const Play: React.FC<Props> = (props) => {
             <Button onClick={() => summonCard(name, Number(cardSlot))}>
               Summon Card
             </Button>
-            <Button onClick={() => summonCard(name, Number(cardSlot))}>
+            <Button onClick={() => endTurn(name, Number(cardSlot))}>
               End Turn
             </Button>
-            <Button onClick={() => summonCard(name, Number(cardSlot))}>
+            <Button onClick={() => forfeit(name, Number(cardSlot))}>
               Forfeit
             </Button>
-            <Button onClick={() => summonCard(name, Number(cardSlot))}>
+            <Button onClick={() => forfeitOpponent(name, Number(cardSlot))}>
               Forfeit Opponent
             </Button>
-            <Button onClick={() => summonCard(name, Number(cardSlot))}>
-              Win
-            </Button>
-            <Button onClick={() => summonCard(name, Number(cardSlot))}>
+            <Button onClick={() => win(name, Number(cardSlot))}>Win</Button>
+            <Button onClick={() => attack(name, Number(cardSlot))}>
               Attack
             </Button>
-            <Button onClick={() => summonCard(name, Number(cardSlot))}>
+            <Button onClick={() => attackPlayer(name, Number(cardSlot))}>
               Attack Player
             </Button>
           </div>
