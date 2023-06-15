@@ -1,8 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext } from 'react'
 import './style.css'
 import * as Page from '../../Page'
 import * as Controller from '../../Controller'
-import * as Card from '../../../templates/card';
+import * as Card from '../../Card'
+import * as game from '../../../data/game'
 
 type Props = {
 
@@ -17,7 +18,7 @@ export const Play: React.FC<Props> = (props) => {
         console.log("go to page: menu")
         setControllerState(Controller.setPage('menu')(controllerState))
       }}>Menu</button> */}
-      
+
       {/* <div>This is the "play" page</div> */}
       <div className='game'>
         <div className='game-sidebar game-leftSidebar'>
@@ -28,27 +29,27 @@ export const Play: React.FC<Props> = (props) => {
 
           {/* Opponent's hand */}
           <div className='game-hand game-opponentHand'>
-            {Card.renderCard(Card.example1)}
-            {Card.renderCard(Card.example2)}
+            <Card.Card card={game.exampleCard1}></Card.Card>
+            <Card.Card card={game.exampleCard1}></Card.Card>
           </div>
 
           {/* Opponent's field */}
           <div className='game-field game-opponentField'>
-            {Card.renderCard(Card.example1)}
-            {Card.renderCard(Card.example2)}
+            <Card.Card card={game.exampleCard1}></Card.Card>
+            <Card.Card card={game.exampleCard1}></Card.Card>
           </div>
           <div className='game-fieldDivider'></div>
 
           {/* Player's field */}
           <div className='game-field game-playerField'>
-            {Card.renderCard(Card.example1)}
-            {Card.renderCard(Card.example2)}
+            <Card.Card card={game.exampleCard1}></Card.Card>
+            <Card.Card card={game.exampleCard1}></Card.Card>
           </div>
 
           {/* Player's hand */}
           <div className='game-hand game-playerHand'>
-            {Card.renderCard(Card.example1)}
-            {Card.renderCard(Card.example2)}
+            <Card.Card card={game.exampleCard1}></Card.Card>
+            <Card.Card card={game.exampleCard1}></Card.Card>
           </div>
         </div>
         <div className='game-sidebar game-rightSidebar'>
