@@ -15,10 +15,10 @@ export const Card: React.FC<Props> = (props) => (
       </div>
       <br />
       <div className="card-image">
-        <img src={props.card.image} alt="CARD IMAGE"></img>
+        <img src={props.card.imageHref} alt="CARD IMAGE"></img>
       </div>
       <div className="card-body">
-        <div className="card-ability">{props.card.ability}</div>
+        <div className="card-ability">{props.card.abilityDescription}</div>
       </div>
       <div className="card-footer">
         <div className="card-attack">{props.card.attack}</div>
