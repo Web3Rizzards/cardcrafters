@@ -15,8 +15,28 @@ export function createSystemCalls(
     return getComponentValue(Counter, singletonEntity);
   };
 
-  const createCard = async (cardName: string) => {
-    const tx = await worldSend("createCard", [cardName, 1, 1, 1, 0, 1]);
+  const createCard = async (
+    cardName: string,
+    attack: number,
+    health: number,
+    cost: number,
+    ability: number,
+    abilityValue: number
+  ) => {
+    // string memory cardName,
+    // uint32 attack,
+    // uint32 health,
+    // uint32 cost,
+    // AbilityType abilityType,
+    // uint32 abilityValue
+    const tx = await worldSend("createCard", [
+      cardName,
+      attack,
+      health,
+      cost,
+      ability,
+      abilityValue,
+    ]);
     await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
     return getComponentValue(Counter, singletonEntity);
   };
@@ -29,6 +49,7 @@ export function createSystemCalls(
 
   const joinPlayer1 = async () => {
     const tx = await worldSend("joinPlayer1", []);
+    console.log("🚀 | joinPlayer1 | tx:", tx);
     await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
     return getComponentValue(Counter, singletonEntity);
   };

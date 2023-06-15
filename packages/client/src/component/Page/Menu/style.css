@@ -1,4 +1,6 @@
 .menu-page-inner {
+  display: flex;
   width: 40em;
   margin: auto;
+  align-items: center;
 }

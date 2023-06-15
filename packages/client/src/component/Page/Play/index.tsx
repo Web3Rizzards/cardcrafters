@@ -5,10 +5,12 @@ import * as Controller from "../../Controller";
 import * as Page from "../../Page";
 import * as game from "../../../data/game";
 
+import { Has, HasValue, getComponentValueStrict } from "@latticexyz/recs";
 import React, { useContext, useState } from "react";
 
 import Button from "../../Button";
 import { useComponentValue } from "@latticexyz/react";
+import { useEntityQuery } from "@latticexyz/react";
 import { useMUD } from "../../../MUDContext";
 
 type Props = {};
@@ -19,7 +21,7 @@ export const Play: React.FC<Props> = (props) => {
   );
 
   const {
-    components: { Counter, Game },
+    components: { Counter, Game, Card: Cards },
     systemCalls: {
       increment,
       createCard,
@@ -29,6 +31,12 @@ export const Play: React.FC<Props> = (props) => {
     },
     network: { singletonEntity },
   } = useMUD();
+
+  const entities = useEntityQuery([
+    HasValue(Cards, { creator: "0x5FbDB2315678afecb367f032d93F642f64180aa3" }),
+  ]);
+  console.log("🚀 | entities:", entities);
+
   const counter = useComponentValue(Counter, singletonEntity);
   const players = useComponentValue(Game, singletonEntity);
 
@@ -117,7 +125,7 @@ export const Play: React.FC<Props> = (props) => {
 
             <div>Player 1 Health:</div>
             <div>Player 2 Health:</div>
-            <Button onClick={() => createCard(name)}>Create Card</Button>
+            {/* <Button onClick={() => createCard(name)}>Create Card</Button> */}
             <Button onClick={() => joinPlayer1()}>
               {players?.player1 ? players?.player1 : "Join player 1"}
             </Button>
@@ -127,7 +135,7 @@ export const Play: React.FC<Props> = (props) => {
             <Button onClick={() => summonCard(name, Number(cardSlot))}>
               Summon Card
             </Button>
-            <Button onClick={() => endTurn(name, Number(cardSlot))}>
+            {/* <Button onClick={() => endTurn(name, Number(cardSlot))}>
               End Turn
             </Button>
             <Button onClick={() => forfeit(name, Number(cardSlot))}>
@@ -142,7 +150,7 @@ export const Play: React.FC<Props> = (props) => {
             </Button>
             <Button onClick={() => attackPlayer(name, Number(cardSlot))}>
               Attack Player
-            </Button>
+            </Button> */}
           </div>
         </div>
       </div>
