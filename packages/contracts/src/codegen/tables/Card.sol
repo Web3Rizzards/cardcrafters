@@ -24,28 +24,26 @@ bytes32 constant _tableId = bytes32(abi.encodePacked(bytes16(""), bytes16("Card"
 bytes32 constant CardTableId = _tableId;
 
 struct CardData {
-  uint32 max_attack;
   uint32 attack;
-  uint32 max_health;
   uint32 health;
   uint32 cost;
   AbilityType ability_type;
   uint32 ability_value;
   address creator;
+  bool exists;
 }
 
 library Card {
   /** Get the table's schema */
   function getSchema() internal pure returns (Schema) {
-    SchemaType[] memory _schema = new SchemaType[](8);
+    SchemaType[] memory _schema = new SchemaType[](7);
     _schema[0] = SchemaType.UINT32;
     _schema[1] = SchemaType.UINT32;
     _schema[2] = SchemaType.UINT32;
-    _schema[3] = SchemaType.UINT32;
+    _schema[3] = SchemaType.UINT8;
     _schema[4] = SchemaType.UINT32;
-    _schema[5] = SchemaType.UINT8;
-    _schema[6] = SchemaType.UINT32;
-    _schema[7] = SchemaType.ADDRESS;
+    _schema[5] = SchemaType.ADDRESS;
+    _schema[6] = SchemaType.BOOL;
 
     return SchemaLib.encode(_schema);
   }
@@ -59,15 +57,14 @@ library Card {
 
   /** Get the table's metadata */
   function getMetadata() internal pure returns (string memory, string[] memory) {
-    string[] memory _fieldNames = new string[](8);
-    _fieldNames[0] = "max_attack";
-    _fieldNames[1] = "attack";
-    _fieldNames[2] = "max_health";
-    _fieldNames[3] = "health";
-    _fieldNames[4] = "cost";
-    _fieldNames[5] = "ability_type";
-    _fieldNames[6] = "ability_value";
-    _fieldNames[7] = "creator";
+    string[] memory _fieldNames = new string[](7);
+    _fieldNames[0] = "attack";
+    _fieldNames[1] = "health";
+    _fieldNames[2] = "cost";
+    _fieldNames[3] = "ability_type";
+    _fieldNames[4] = "ability_value";
+    _fieldNames[5] = "creator";
+    _fieldNames[6] = "exists";
     return ("Card", _fieldNames);
   }
 
@@ -93,46 +90,12 @@ library Card {
     _store.setMetadata(_tableId, _tableName, _fieldNames);
   }
 
-  /** Get max_attack */
-  function getMax_attack(bytes32 key) internal view returns (uint32 max_attack) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 0);
-    return (uint32(Bytes.slice4(_blob, 0)));
-  }
-
-  /** Get max_attack (using the specified store) */
-  function getMax_attack(IStore _store, bytes32 key) internal view returns (uint32 max_attack) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 0);
-    return (uint32(Bytes.slice4(_blob, 0)));
-  }
-
-  /** Set max_attack */
-  function setMax_attack(bytes32 key, uint32 max_attack) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    StoreSwitch.setField(_tableId, _keyTuple, 0, abi.encodePacked((max_attack)));
-  }
-
-  /** Set max_attack (using the specified store) */
-  function setMax_attack(IStore _store, bytes32 key, uint32 max_attack) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    _store.setField(_tableId, _keyTuple, 0, abi.encodePacked((max_attack)));
-  }
-
   /** Get attack */
   function getAttack(bytes32 key) internal view returns (uint32 attack) {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 1);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 0);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -141,7 +104,7 @@ library Card {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 1);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 0);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -150,7 +113,7 @@ library Card {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setField(_tableId, _keyTuple, 1, abi.encodePacked((attack)));
+    StoreSwitch.setField(_tableId, _keyTuple, 0, abi.encodePacked((attack)));
   }
 
   /** Set attack (using the specified store) */
@@ -158,41 +121,7 @@ library Card {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    _store.setField(_tableId, _keyTuple, 1, abi.encodePacked((attack)));
-  }
-
-  /** Get max_health */
-  function getMax_health(bytes32 key) internal view returns (uint32 max_health) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 2);
-    return (uint32(Bytes.slice4(_blob, 0)));
-  }
-
-  /** Get max_health (using the specified store) */
-  function getMax_health(IStore _store, bytes32 key) internal view returns (uint32 max_health) {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 2);
-    return (uint32(Bytes.slice4(_blob, 0)));
-  }
-
-  /** Set max_health */
-  function setMax_health(bytes32 key, uint32 max_health) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    StoreSwitch.setField(_tableId, _keyTuple, 2, abi.encodePacked((max_health)));
-  }
-
-  /** Set max_health (using the specified store) */
-  function setMax_health(IStore _store, bytes32 key, uint32 max_health) internal {
-    bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
-
-    _store.setField(_tableId, _keyTuple, 2, abi.encodePacked((max_health)));
+    _store.setField(_tableId, _keyTuple, 0, abi.encodePacked((attack)));
   }
 
   /** Get health */
@@ -200,7 +129,7 @@ library Card {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 3);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 1);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -209,7 +138,7 @@ library Card {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 3);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 1);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -218,7 +147,7 @@ library Card {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setField(_tableId, _keyTuple, 3, abi.encodePacked((health)));
+    StoreSwitch.setField(_tableId, _keyTuple, 1, abi.encodePacked((health)));
   }
 
   /** Set health (using the specified store) */
@@ -226,7 +155,7 @@ library Card {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    _store.setField(_tableId, _keyTuple, 3, abi.encodePacked((health)));
+    _store.setField(_tableId, _keyTuple, 1, abi.encodePacked((health)));
   }
 
   /** Get cost */
@@ -234,7 +163,7 @@ library Card {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 4);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 2);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -243,7 +172,7 @@ library Card {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 4);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 2);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -252,7 +181,7 @@ library Card {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setField(_tableId, _keyTuple, 4, abi.encodePacked((cost)));
+    StoreSwitch.setField(_tableId, _keyTuple, 2, abi.encodePacked((cost)));
   }
 
   /** Set cost (using the specified store) */
@@ -260,7 +189,7 @@ library Card {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    _store.setField(_tableId, _keyTuple, 4, abi.encodePacked((cost)));
+    _store.setField(_tableId, _keyTuple, 2, abi.encodePacked((cost)));
   }
 
   /** Get ability_type */
@@ -268,7 +197,7 @@ library Card {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 5);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 3);
     return AbilityType(uint8(Bytes.slice1(_blob, 0)));
   }
 
@@ -277,7 +206,7 @@ library Card {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 5);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 3);
     return AbilityType(uint8(Bytes.slice1(_blob, 0)));
   }
 
@@ -286,7 +215,7 @@ library Card {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setField(_tableId, _keyTuple, 5, abi.encodePacked(uint8(ability_type)));
+    StoreSwitch.setField(_tableId, _keyTuple, 3, abi.encodePacked(uint8(ability_type)));
   }
 
   /** Set ability_type (using the specified store) */
@@ -294,7 +223,7 @@ library Card {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    _store.setField(_tableId, _keyTuple, 5, abi.encodePacked(uint8(ability_type)));
+    _store.setField(_tableId, _keyTuple, 3, abi.encodePacked(uint8(ability_type)));
   }
 
   /** Get ability_value */
@@ -302,7 +231,7 @@ library Card {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 6);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 4);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -311,7 +240,7 @@ library Card {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 6);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 4);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -320,7 +249,7 @@ library Card {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setField(_tableId, _keyTuple, 6, abi.encodePacked((ability_value)));
+    StoreSwitch.setField(_tableId, _keyTuple, 4, abi.encodePacked((ability_value)));
   }
 
   /** Set ability_value (using the specified store) */
@@ -328,7 +257,7 @@ library Card {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    _store.setField(_tableId, _keyTuple, 6, abi.encodePacked((ability_value)));
+    _store.setField(_tableId, _keyTuple, 4, abi.encodePacked((ability_value)));
   }
 
   /** Get creator */
@@ -336,7 +265,7 @@ library Card {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 7);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 5);
     return (address(Bytes.slice20(_blob, 0)));
   }
 
@@ -345,7 +274,7 @@ library Card {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 7);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 5);
     return (address(Bytes.slice20(_blob, 0)));
   }
 
@@ -354,7 +283,7 @@ library Card {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    StoreSwitch.setField(_tableId, _keyTuple, 7, abi.encodePacked((creator)));
+    StoreSwitch.setField(_tableId, _keyTuple, 5, abi.encodePacked((creator)));
   }
 
   /** Set creator (using the specified store) */
@@ -362,7 +291,41 @@ library Card {
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
 
-    _store.setField(_tableId, _keyTuple, 7, abi.encodePacked((creator)));
+    _store.setField(_tableId, _keyTuple, 5, abi.encodePacked((creator)));
+  }
+
+  /** Get exists */
+  function getExists(bytes32 key) internal view returns (bool exists) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 6);
+    return (_toBool(uint8(Bytes.slice1(_blob, 0))));
+  }
+
+  /** Get exists (using the specified store) */
+  function getExists(IStore _store, bytes32 key) internal view returns (bool exists) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 6);
+    return (_toBool(uint8(Bytes.slice1(_blob, 0))));
+  }
+
+  /** Set exists */
+  function setExists(bytes32 key, bool exists) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setField(_tableId, _keyTuple, 6, abi.encodePacked((exists)));
+  }
+
+  /** Set exists (using the specified store) */
+  function setExists(IStore _store, bytes32 key, bool exists) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    _store.setField(_tableId, _keyTuple, 6, abi.encodePacked((exists)));
   }
 
   /** Get the full data */
@@ -386,16 +349,15 @@ library Card {
   /** Set the full data using individual values */
   function set(
     bytes32 key,
-    uint32 max_attack,
     uint32 attack,
-    uint32 max_health,
     uint32 health,
     uint32 cost,
     AbilityType ability_type,
     uint32 ability_value,
-    address creator
+    address creator,
+    bool exists
   ) internal {
-    bytes memory _data = encode(max_attack, attack, max_health, health, cost, ability_type, ability_value, creator);
+    bytes memory _data = encode(attack, health, cost, ability_type, ability_value, creator, exists);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -407,16 +369,15 @@ library Card {
   function set(
     IStore _store,
     bytes32 key,
-    uint32 max_attack,
     uint32 attack,
-    uint32 max_health,
     uint32 health,
     uint32 cost,
     AbilityType ability_type,
     uint32 ability_value,
-    address creator
+    address creator,
+    bool exists
   ) internal {
-    bytes memory _data = encode(max_attack, attack, max_health, health, cost, ability_type, ability_value, creator);
+    bytes memory _data = encode(attack, health, cost, ability_type, ability_value, creator, exists);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
     _keyTuple[0] = key;
@@ -428,14 +389,13 @@ library Card {
   function set(bytes32 key, CardData memory _table) internal {
     set(
       key,
-      _table.max_attack,
       _table.attack,
-      _table.max_health,
       _table.health,
       _table.cost,
       _table.ability_type,
       _table.ability_value,
-      _table.creator
+      _table.creator,
+      _table.exists
     );
   }
 
@@ -444,48 +404,44 @@ library Card {
     set(
       _store,
       key,
-      _table.max_attack,
       _table.attack,
-      _table.max_health,
       _table.health,
       _table.cost,
       _table.ability_type,
       _table.ability_value,
-      _table.creator
+      _table.creator,
+      _table.exists
     );
   }
 
   /** Decode the tightly packed blob using this table's schema */
   function decode(bytes memory _blob) internal pure returns (CardData memory _table) {
-    _table.max_attack = (uint32(Bytes.slice4(_blob, 0)));
+    _table.attack = (uint32(Bytes.slice4(_blob, 0)));
 
-    _table.attack = (uint32(Bytes.slice4(_blob, 4)));
+    _table.health = (uint32(Bytes.slice4(_blob, 4)));
 
-    _table.max_health = (uint32(Bytes.slice4(_blob, 8)));
+    _table.cost = (uint32(Bytes.slice4(_blob, 8)));
 
-    _table.health = (uint32(Bytes.slice4(_blob, 12)));
+    _table.ability_type = AbilityType(uint8(Bytes.slice1(_blob, 12)));
 
-    _table.cost = (uint32(Bytes.slice4(_blob, 16)));
+    _table.ability_value = (uint32(Bytes.slice4(_blob, 13)));
 
-    _table.ability_type = AbilityType(uint8(Bytes.slice1(_blob, 20)));
+    _table.creator = (address(Bytes.slice20(_blob, 17)));
 
-    _table.ability_value = (uint32(Bytes.slice4(_blob, 21)));
-
-    _table.creator = (address(Bytes.slice20(_blob, 25)));
+    _table.exists = (_toBool(uint8(Bytes.slice1(_blob, 37))));
   }
 
   /** Tightly pack full data using this table's schema */
   function encode(
-    uint32 max_attack,
     uint32 attack,
-    uint32 max_health,
     uint32 health,
     uint32 cost,
     AbilityType ability_type,
     uint32 ability_value,
-    address creator
+    address creator,
+    bool exists
   ) internal view returns (bytes memory) {
-    return abi.encodePacked(max_attack, attack, max_health, health, cost, ability_type, ability_value, creator);
+    return abi.encodePacked(attack, health, cost, ability_type, ability_value, creator, exists);
   }
 
   /** Encode keys as a bytes32 array using this table's schema */
@@ -508,5 +464,11 @@ library Card {
     _keyTuple[0] = key;
 
     _store.deleteRecord(_tableId, _keyTuple);
+  }
+}
+
+function _toBool(uint8 value) pure returns (bool result) {
+  assembly {
+    result := value
   }
 }

@@ -37,7 +37,7 @@ library Player {
 
   function getKeySchema() internal pure returns (Schema) {
     SchemaType[] memory _schema = new SchemaType[](1);
-    _schema[0] = SchemaType.BYTES32;
+    _schema[0] = SchemaType.ADDRESS;
 
     return SchemaLib.encode(_schema);
   }
@@ -73,119 +73,119 @@ library Player {
   }
 
   /** Get health */
-  function getHealth(bytes32 key) internal view returns (uint32 health) {
+  function getHealth(address player) internal view returns (uint32 health) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(player)));
 
     bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 0);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
   /** Get health (using the specified store) */
-  function getHealth(IStore _store, bytes32 key) internal view returns (uint32 health) {
+  function getHealth(IStore _store, address player) internal view returns (uint32 health) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(player)));
 
     bytes memory _blob = _store.getField(_tableId, _keyTuple, 0);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
   /** Set health */
-  function setHealth(bytes32 key, uint32 health) internal {
+  function setHealth(address player, uint32 health) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(player)));
 
     StoreSwitch.setField(_tableId, _keyTuple, 0, abi.encodePacked((health)));
   }
 
   /** Set health (using the specified store) */
-  function setHealth(IStore _store, bytes32 key, uint32 health) internal {
+  function setHealth(IStore _store, address player, uint32 health) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(player)));
 
     _store.setField(_tableId, _keyTuple, 0, abi.encodePacked((health)));
   }
 
   /** Get mana */
-  function getMana(bytes32 key) internal view returns (uint32 mana) {
+  function getMana(address player) internal view returns (uint32 mana) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(player)));
 
     bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 1);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
   /** Get mana (using the specified store) */
-  function getMana(IStore _store, bytes32 key) internal view returns (uint32 mana) {
+  function getMana(IStore _store, address player) internal view returns (uint32 mana) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(player)));
 
     bytes memory _blob = _store.getField(_tableId, _keyTuple, 1);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
   /** Set mana */
-  function setMana(bytes32 key, uint32 mana) internal {
+  function setMana(address player, uint32 mana) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(player)));
 
     StoreSwitch.setField(_tableId, _keyTuple, 1, abi.encodePacked((mana)));
   }
 
   /** Set mana (using the specified store) */
-  function setMana(IStore _store, bytes32 key, uint32 mana) internal {
+  function setMana(IStore _store, address player, uint32 mana) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(player)));
 
     _store.setField(_tableId, _keyTuple, 1, abi.encodePacked((mana)));
   }
 
   /** Get the full data */
-  function get(bytes32 key) internal view returns (PlayerData memory _table) {
+  function get(address player) internal view returns (PlayerData memory _table) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(player)));
 
     bytes memory _blob = StoreSwitch.getRecord(_tableId, _keyTuple, getSchema());
     return decode(_blob);
   }
 
   /** Get the full data (using the specified store) */
-  function get(IStore _store, bytes32 key) internal view returns (PlayerData memory _table) {
+  function get(IStore _store, address player) internal view returns (PlayerData memory _table) {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(player)));
 
     bytes memory _blob = _store.getRecord(_tableId, _keyTuple, getSchema());
     return decode(_blob);
   }
 
   /** Set the full data using individual values */
-  function set(bytes32 key, uint32 health, uint32 mana) internal {
+  function set(address player, uint32 health, uint32 mana) internal {
     bytes memory _data = encode(health, mana);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(player)));
 
     StoreSwitch.setRecord(_tableId, _keyTuple, _data);
   }
 
   /** Set the full data using individual values (using the specified store) */
-  function set(IStore _store, bytes32 key, uint32 health, uint32 mana) internal {
+  function set(IStore _store, address player, uint32 health, uint32 mana) internal {
     bytes memory _data = encode(health, mana);
 
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(player)));
 
     _store.setRecord(_tableId, _keyTuple, _data);
   }
 
   /** Set the full data using the data struct */
-  function set(bytes32 key, PlayerData memory _table) internal {
-    set(key, _table.health, _table.mana);
+  function set(address player, PlayerData memory _table) internal {
+    set(player, _table.health, _table.mana);
   }
 
   /** Set the full data using the data struct (using the specified store) */
-  function set(IStore _store, bytes32 key, PlayerData memory _table) internal {
-    set(_store, key, _table.health, _table.mana);
+  function set(IStore _store, address player, PlayerData memory _table) internal {
+    set(_store, player, _table.health, _table.mana);
   }
 
   /** Decode the tightly packed blob using this table's schema */
@@ -201,23 +201,23 @@ library Player {
   }
 
   /** Encode keys as a bytes32 array using this table's schema */
-  function encodeKeyTuple(bytes32 key) internal pure returns (bytes32[] memory _keyTuple) {
+  function encodeKeyTuple(address player) internal pure returns (bytes32[] memory _keyTuple) {
     _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(player)));
   }
 
   /* Delete all data for given keys */
-  function deleteRecord(bytes32 key) internal {
+  function deleteRecord(address player) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(player)));
 
     StoreSwitch.deleteRecord(_tableId, _keyTuple);
   }
 
   /* Delete all data for given keys (using the specified store) */
-  function deleteRecord(IStore _store, bytes32 key) internal {
+  function deleteRecord(IStore _store, address player) internal {
     bytes32[] memory _keyTuple = new bytes32[](1);
-    _keyTuple[0] = key;
+    _keyTuple[0] = bytes32(uint256(uint160(player)));
 
     _store.deleteRecord(_tableId, _keyTuple);
   }
