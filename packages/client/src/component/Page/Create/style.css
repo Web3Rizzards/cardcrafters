@@ -1,0 +1,30 @@
+.create-page-inner {
+  width: 40em;
+  margin: auto;
+}
+
+.create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.create-form {
+  /* max-width: 40em; */
+}
+
+.create-form-submit {
+  width: 10em;
+}
+
+.create-generating {}
+
+.create-generating-theme {
+  font-style: italic;
+  padding: 1em;
+  background-color: rgb(220, 220, 220);
+}
+
+.create-prompt-length-limit {
+  font-style: italic;
+}

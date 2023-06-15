@@ -1,0 +1,15 @@
+.page {
+  margin: 0;
+  padding: 0;
+}
+
+.page-title {
+  padding: 1em;
+
+  background-color: black;
+  color: white;
+}
+
+.page-body {
+  padding: 1em;
+}

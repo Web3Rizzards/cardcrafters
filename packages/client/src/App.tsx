@@ -6,6 +6,10 @@ import { useComponentValue } from "@latticexyz/react";
 import { useMUD } from "./MUDContext";
 import { useState } from "react";
 
+// export const App = () => (
+//   <Controller.Controller />
+// )
+
 export const App = () => {
   const {
     components: { Counter, Game },
