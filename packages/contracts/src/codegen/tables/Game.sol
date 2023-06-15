@@ -25,18 +25,24 @@ struct GameData {
   address player2;
   uint32 round;
   uint8 turn;
-  uint64 start_time;
+  bool started;
+  uint256 start_time;
+  uint256 last_move_time;
+  address winner;
 }
 
 library Game {
   /** Get the table's schema */
   function getSchema() internal pure returns (Schema) {
-    SchemaType[] memory _schema = new SchemaType[](5);
+    SchemaType[] memory _schema = new SchemaType[](8);
     _schema[0] = SchemaType.ADDRESS;
     _schema[1] = SchemaType.ADDRESS;
     _schema[2] = SchemaType.UINT32;
     _schema[3] = SchemaType.UINT8;
-    _schema[4] = SchemaType.UINT64;
+    _schema[4] = SchemaType.BOOL;
+    _schema[5] = SchemaType.UINT256;
+    _schema[6] = SchemaType.UINT256;
+    _schema[7] = SchemaType.ADDRESS;
 
     return SchemaLib.encode(_schema);
   }
@@ -49,12 +55,15 @@ library Game {
 
   /** Get the table's metadata */
   function getMetadata() internal pure returns (string memory, string[] memory) {
-    string[] memory _fieldNames = new string[](5);
+    string[] memory _fieldNames = new string[](8);
     _fieldNames[0] = "player1";
     _fieldNames[1] = "player2";
     _fieldNames[2] = "round";
     _fieldNames[3] = "turn";
-    _fieldNames[4] = "start_time";
+    _fieldNames[4] = "started";
+    _fieldNames[5] = "start_time";
+    _fieldNames[6] = "last_move_time";
+    _fieldNames[7] = "winner";
     return ("Game", _fieldNames);
   }
 
@@ -200,34 +209,124 @@ library Game {
     _store.setField(_tableId, _keyTuple, 3, abi.encodePacked((turn)));
   }
 
-  /** Get start_time */
-  function getStart_time() internal view returns (uint64 start_time) {
+  /** Get started */
+  function getStarted() internal view returns (bool started) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 4);
-    return (uint64(Bytes.slice8(_blob, 0)));
+    return (_toBool(uint8(Bytes.slice1(_blob, 0))));
   }
 
-  /** Get start_time (using the specified store) */
-  function getStart_time(IStore _store) internal view returns (uint64 start_time) {
+  /** Get started (using the specified store) */
+  function getStarted(IStore _store) internal view returns (bool started) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     bytes memory _blob = _store.getField(_tableId, _keyTuple, 4);
-    return (uint64(Bytes.slice8(_blob, 0)));
+    return (_toBool(uint8(Bytes.slice1(_blob, 0))));
+  }
+
+  /** Set started */
+  function setStarted(bool started) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreSwitch.setField(_tableId, _keyTuple, 4, abi.encodePacked((started)));
+  }
+
+  /** Set started (using the specified store) */
+  function setStarted(IStore _store, bool started) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    _store.setField(_tableId, _keyTuple, 4, abi.encodePacked((started)));
+  }
+
+  /** Get start_time */
+  function getStart_time() internal view returns (uint256 start_time) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 5);
+    return (uint256(Bytes.slice32(_blob, 0)));
+  }
+
+  /** Get start_time (using the specified store) */
+  function getStart_time(IStore _store) internal view returns (uint256 start_time) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 5);
+    return (uint256(Bytes.slice32(_blob, 0)));
   }
 
   /** Set start_time */
-  function setStart_time(uint64 start_time) internal {
+  function setStart_time(uint256 start_time) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setField(_tableId, _keyTuple, 4, abi.encodePacked((start_time)));
+    StoreSwitch.setField(_tableId, _keyTuple, 5, abi.encodePacked((start_time)));
   }
 
   /** Set start_time (using the specified store) */
-  function setStart_time(IStore _store, uint64 start_time) internal {
+  function setStart_time(IStore _store, uint256 start_time) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    _store.setField(_tableId, _keyTuple, 4, abi.encodePacked((start_time)));
+    _store.setField(_tableId, _keyTuple, 5, abi.encodePacked((start_time)));
+  }
+
+  /** Get last_move_time */
+  function getLast_move_time() internal view returns (uint256 last_move_time) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 6);
+    return (uint256(Bytes.slice32(_blob, 0)));
+  }
+
+  /** Get last_move_time (using the specified store) */
+  function getLast_move_time(IStore _store) internal view returns (uint256 last_move_time) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 6);
+    return (uint256(Bytes.slice32(_blob, 0)));
+  }
+
+  /** Set last_move_time */
+  function setLast_move_time(uint256 last_move_time) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreSwitch.setField(_tableId, _keyTuple, 6, abi.encodePacked((last_move_time)));
+  }
+
+  /** Set last_move_time (using the specified store) */
+  function setLast_move_time(IStore _store, uint256 last_move_time) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    _store.setField(_tableId, _keyTuple, 6, abi.encodePacked((last_move_time)));
+  }
+
+  /** Get winner */
+  function getWinner() internal view returns (address winner) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 7);
+    return (address(Bytes.slice20(_blob, 0)));
+  }
+
+  /** Get winner (using the specified store) */
+  function getWinner(IStore _store) internal view returns (address winner) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 7);
+    return (address(Bytes.slice20(_blob, 0)));
+  }
+
+  /** Set winner */
+  function setWinner(address winner) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreSwitch.setField(_tableId, _keyTuple, 7, abi.encodePacked((winner)));
+  }
+
+  /** Set winner (using the specified store) */
+  function setWinner(IStore _store, address winner) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    _store.setField(_tableId, _keyTuple, 7, abi.encodePacked((winner)));
   }
 
   /** Get the full data */
@@ -247,8 +346,17 @@ library Game {
   }
 
   /** Set the full data using individual values */
-  function set(address player1, address player2, uint32 round, uint8 turn, uint64 start_time) internal {
-    bytes memory _data = encode(player1, player2, round, turn, start_time);
+  function set(
+    address player1,
+    address player2,
+    uint32 round,
+    uint8 turn,
+    bool started,
+    uint256 start_time,
+    uint256 last_move_time,
+    address winner
+  ) internal {
+    bytes memory _data = encode(player1, player2, round, turn, started, start_time, last_move_time, winner);
 
     bytes32[] memory _keyTuple = new bytes32[](0);
 
@@ -256,8 +364,18 @@ library Game {
   }
 
   /** Set the full data using individual values (using the specified store) */
-  function set(IStore _store, address player1, address player2, uint32 round, uint8 turn, uint64 start_time) internal {
-    bytes memory _data = encode(player1, player2, round, turn, start_time);
+  function set(
+    IStore _store,
+    address player1,
+    address player2,
+    uint32 round,
+    uint8 turn,
+    bool started,
+    uint256 start_time,
+    uint256 last_move_time,
+    address winner
+  ) internal {
+    bytes memory _data = encode(player1, player2, round, turn, started, start_time, last_move_time, winner);
 
     bytes32[] memory _keyTuple = new bytes32[](0);
 
@@ -266,12 +384,31 @@ library Game {
 
   /** Set the full data using the data struct */
   function set(GameData memory _table) internal {
-    set(_table.player1, _table.player2, _table.round, _table.turn, _table.start_time);
+    set(
+      _table.player1,
+      _table.player2,
+      _table.round,
+      _table.turn,
+      _table.started,
+      _table.start_time,
+      _table.last_move_time,
+      _table.winner
+    );
   }
 
   /** Set the full data using the data struct (using the specified store) */
   function set(IStore _store, GameData memory _table) internal {
-    set(_store, _table.player1, _table.player2, _table.round, _table.turn, _table.start_time);
+    set(
+      _store,
+      _table.player1,
+      _table.player2,
+      _table.round,
+      _table.turn,
+      _table.started,
+      _table.start_time,
+      _table.last_move_time,
+      _table.winner
+    );
   }
 
   /** Decode the tightly packed blob using this table's schema */
@@ -284,7 +421,13 @@ library Game {
 
     _table.turn = (uint8(Bytes.slice1(_blob, 44)));
 
-    _table.start_time = (uint64(Bytes.slice8(_blob, 45)));
+    _table.started = (_toBool(uint8(Bytes.slice1(_blob, 45))));
+
+    _table.start_time = (uint256(Bytes.slice32(_blob, 46)));
+
+    _table.last_move_time = (uint256(Bytes.slice32(_blob, 78)));
+
+    _table.winner = (address(Bytes.slice20(_blob, 110)));
   }
 
   /** Tightly pack full data using this table's schema */
@@ -293,9 +436,12 @@ library Game {
     address player2,
     uint32 round,
     uint8 turn,
-    uint64 start_time
+    bool started,
+    uint256 start_time,
+    uint256 last_move_time,
+    address winner
   ) internal view returns (bytes memory) {
-    return abi.encodePacked(player1, player2, round, turn, start_time);
+    return abi.encodePacked(player1, player2, round, turn, started, start_time, last_move_time, winner);
   }
 
   /** Encode keys as a bytes32 array using this table's schema */
@@ -315,5 +461,11 @@ library Game {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
     _store.deleteRecord(_tableId, _keyTuple);
+  }
+}
+
+function _toBool(uint8 value) pure returns (bool result) {
+  assembly {
+    result := value
   }
 }

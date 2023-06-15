@@ -15,4 +15,6 @@ interface IGameSystem {
   function forfeitOpponent() external;
 
   function forfeit() external;
+
+  function win() external;
 }

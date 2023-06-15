@@ -25,14 +25,31 @@ export function defineContractComponents(world: World) {
       return defineComponent(
         world,
         {
-          max_attack: RecsType.Number,
           attack: RecsType.Number,
-          max_health: RecsType.Number,
           health: RecsType.Number,
           cost: RecsType.Number,
           ability_type: RecsType.Number,
           ability_value: RecsType.Number,
           creator: RecsType.String,
+          exists: RecsType.Boolean,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    Board: (() => {
+      const tableId = new TableId("", "Board");
+      return defineComponent(
+        world,
+        {
+          card: RecsType.String,
+          attack: RecsType.Number,
+          health: RecsType.Number,
+          lastAttacked: RecsType.Number,
         },
         {
           metadata: {
@@ -51,7 +68,10 @@ export function defineContractComponents(world: World) {
           player2: RecsType.String,
           round: RecsType.Number,
           turn: RecsType.Number,
+          started: RecsType.Boolean,
           start_time: RecsType.BigInt,
+          last_move_time: RecsType.BigInt,
+          winner: RecsType.String,
         },
         {
           metadata: {
