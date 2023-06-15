@@ -8,6 +8,8 @@
   padding: 0.5em;
   width: var(--card-width);
   /* height: calc(var(--card-width) * 1.618); */
+  box-shadow: 0 0 1em 0 black;
+  border-radius: 0.5em;
 
   cursor: pointer;
 }

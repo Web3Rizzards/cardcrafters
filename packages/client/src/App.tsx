@@ -1,9 +1,8 @@
 import Button from "./component/Button/index.js";
 import { useComponentValue } from "@latticexyz/react";
 import { useMUD } from "./MUDContext";
-import { Card, renderCard } from "./templates/card";
 import crypto_bro_image from './public/crypto_bro.png'
-import * as Controller  from "./component/Controller/index.js";
+import * as Controller from "./component/Controller/index.js";
 
 export const App = () => (
   <Controller.Controller />

@@ -28,3 +28,10 @@
 .create-prompt-length-limit {
   font-style: italic;
 }
+
+.create-cards {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1em;
+}
