@@ -3,6 +3,7 @@
   flex-direction: row;
   /* padding: 1em; */
   gap: 1em;
+  max-width: 1440px;
 }
 
 .game-sidebar {
