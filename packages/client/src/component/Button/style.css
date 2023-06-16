@@ -9,6 +9,7 @@
   border-bottom: 4px solid #616161;
   border-radius: 8px;
   cursor: pointer;
+  user-select: none;
 }
 
 .button:hover {

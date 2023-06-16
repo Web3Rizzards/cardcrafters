@@ -21,7 +21,8 @@ x
 .card-inner {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  /* justify-content: space-between; */
+  justify-content: baseline;
 
   background-color: white;
   height: 100%;
@@ -52,7 +53,7 @@ x
 }
 
 .card-ability {
-  height: 3em;
+  /* height: 3em; */
   padding: 0.4em;
   text-align: center;
   margin: auto;

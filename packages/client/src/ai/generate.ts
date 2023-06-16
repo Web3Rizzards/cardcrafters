@@ -94,7 +94,7 @@ export async function generateCard(prompt: CardPrompt): Promise<game.Card> {
 
   const name = await createTextCompletion(
     prelude +
-    `Write the name of a new character with theme "${prompt.theme}" and attributes ${attributesList}. Reply with EXACTLY just the card name.`
+    `Write the name of a new character with theme "${prompt.theme}" and attributes ${attributesList}. Reply with ONLY the card name.`
   );
 
   // const abilityString = await ;
@@ -103,12 +103,12 @@ export async function generateCard(prompt: CardPrompt): Promise<game.Card> {
 
   const abilityDescription = await createTextCompletion(
     prelude +
-    `Write the thematic description of a character with the theme "${prompt.theme}", attributes ${attributesList}, and name "${name}". Reply with EXACTLY just the character description.`
+    `Write the thematic description of a character "${name}" with the theme "${prompt.theme}", attributes ${attributesList}, ${attackQuality(prompt.attack)} and ${healthQuality(prompt.health)}. Reply with ONLY the one-sentence character description.`
   )
 
   const imagePrompt = await createTextCompletion(
     prelude +
-    `Write a vivid description of the art for a card with the theme "${prompt.theme}", attributes ${attributesList}, name "${name}", and ability "${ability}"`
+    `Write a vivid one-sentence description of the art for a card with the theme "${prompt.theme}", attributes ${attributesList}, name "${name}", and ability "${ability}"`
   );
 
   const image = await createImage(imagePrompt);
@@ -124,6 +124,23 @@ export async function generateCard(prompt: CardPrompt): Promise<game.Card> {
   });
 }
 
+function attackQuality(attack: number): string {
+  if (attack < 2)
+    return "weak attack"
+  else if (2 <= attack && attack < 4)
+    return "moderate attack"
+  else
+    return "strong attack"
+}
+
+function healthQuality(health: number): string {
+  if (health < 2)
+    return "low health"
+  else if (2 <= health && health < 4)
+    return "moderate health"
+  else
+    return "high health"
+}
 
 async function generateAbility(type: AbilityType): Promise<game.Ability> {
   switch (type) {
