@@ -56,12 +56,12 @@ export const Play: React.FC<Props> = (props) => {
 
       {/* <div>This is the "play" page</div> */}
       <div className="game">
-        <div className="game-sidebar game-leftSidebar">
+        {/* <div className="game-sidebar game-leftSidebar">
           <div>
             <b>Left Sidebar</b>
           </div>
           <div>Available cards</div>
-        </div>
+        </div> */}
         <div className="game-center">
           {/* Opponent's hand */}
           <div className="game-hand game-opponentHand">
