@@ -101,20 +101,19 @@ export const Play: React.FC<Props> = (props) => {
         <div className="game-center">
           {/* Player 1 Hand */}
           <div className="game-hand game-opponentHand">
-            {}
-            <Card card={game.exampleCard1}></Card>
-            <Card card={game.exampleCard1}></Card>
-            <Card card={game.exampleCard1}></Card>
-            <Card card={game.exampleCard1}></Card>
-            <Card card={game.exampleCard1}></Card>
-            <Card card={game.exampleCard1}></Card>
-            <Card card={game.exampleCard1}></Card>
-            <Card card={game.exampleCard1}></Card>
-            <Card card={game.exampleCard1}></Card>
-            <Card card={game.exampleCard1}></Card>
-            <Card card={game.exampleCard1}></Card>
-            <Card card={game.exampleCard1}></Card>
-            <Card card={game.exampleCard1}></Card>
+            {/* Show Join button if player 1, else show the cards */}
+
+            {players?.player1 ? (
+              // <div className="game-hand-cards">
+              getPlayerCards(playerCardEntities).map((card, index) => (
+                <Card key={index} card={card}></Card>
+              ))
+            ) : (
+              // </div>
+              <Button onClick={() => joinPlayer1()}>
+                {players?.player1 ? players?.player1 : "Join player 1"}
+              </Button>
+            )}
           </div>
 
           {/* Player 1 Stats */}
@@ -127,7 +126,15 @@ export const Play: React.FC<Props> = (props) => {
                 <span className="health-bar-text">{30}</span>
               </div>
             </div>
-            <div className="game-stats-mana">0 / 10</div>
+            <div className="mana-bar">
+              <span className="mana-bar-text">
+                {1}/{5}
+              </span>
+              <div
+                className="mana-bar-fill"
+                style={{ width: (1 / 5) * 100 + "%" }}
+              ></div>
+            </div>
           </div>
 
           {/* Player 1 Field */}
@@ -169,7 +176,15 @@ export const Play: React.FC<Props> = (props) => {
                 <span className="health-bar-text">{30}</span>
               </div>
             </div>
-            <div className="game-stats-mana">0 / 10</div>
+            <div className="mana-bar">
+              <div
+                className="mana-bar-fill"
+                style={{ width: (1 / 1) * 100 + "%" }}
+              ></div>
+              <span className="mana-bar-text">
+                {1}/{1}
+              </span>
+            </div>
           </div>
 
           {/* Player 2 Hand */}
