@@ -39,9 +39,20 @@ export const Create: React.FC<Props> = (props) => {
   const [prompt, setPrompt] = useState<string>("");
 
   const cardsRef: game.Card[] = [];
-  const [cards, setCards] = useState<game.Card[]>(cardsRef);
-
+  const [cards, _setCards] = useState<game.Card[]>(cardsRef);
   const forceUpdate = useForceUpdate();
+
+  function addCard(card: game.Card) {
+    cardsRef.push(card)
+    _setCards(cardsRef)
+    forceUpdate()
+  }
+
+  function resetCards() {
+    while (cardsRef.pop()) {}
+    _setCards([])
+    forceUpdate()
+  }
 
   const ability2Enum = (ability: string) => {
     return { Inspire: 2, Damage: 1, Heal: 0, Weaken: 3 }[ability];
@@ -83,7 +94,9 @@ export const Create: React.FC<Props> = (props) => {
           <div className="create-button-container">
             <Button
               onClick={async (event) => {
+                resetCards()
                 setStage({ case: "generating" });
+                
                 await generateDeck({ theme: prompt }, (card) => {
                   console.log("🚀 | onClick={ | card:", card);
                   createCard(
@@ -95,11 +108,9 @@ export const Create: React.FC<Props> = (props) => {
                     card.ability.amount
                   );
                   console.log(`Generated card: ${card.name}`);
-                  cardsRef.push(card);
-                  console.log(cardsRef.length);
-                  setCards(cardsRef);
-                  forceUpdate();
-                });
+                  addCard(card)
+                })
+                
                 setStage({ case: "generated" });
               }}
             >

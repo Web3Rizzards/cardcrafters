@@ -47,6 +47,8 @@ export async function generateDeck(
   if (true) {
     await queueCardGeneration(["offensive"], 'offensive', random(5, 2), random(4, 1))
     await queueCardGeneration(["defensive"], 'defensive', random(5, 2), random(4, 1))
+    await queueCardGeneration(["control", "skill", "support"], 'skill', random(3, 2), random(4, 3))
+    await queueCardGeneration(["powerful", "leader", "special"], 'special', random(2, 1), random(2, 1));
   } else {
     // offensive cards
     for (let i = 0; i < 4; i++) {
@@ -85,6 +87,8 @@ export type CardPrompt = {
   health: number;
 };
 
+export const nameIgnoreRegExp: RegExp = /(\.|"|')/
+
 export async function generateCard(prompt: CardPrompt): Promise<game.Card> {
   const prelude = `You are a deckbuilding game designer.\n\n`;
 
@@ -92,10 +96,24 @@ export async function generateCard(prompt: CardPrompt): Promise<game.Card> {
     .map((attr) => `"${attr}"`)
     .join(", ");
 
-  const name = await createTextCompletion(
+  let name = await createTextCompletion(
     prelude +
-    `Write the name of a new character with theme "${prompt.theme}" and attributes ${attributesList}. Reply with ONLY the card name.`
-  );
+    `Write the name of a new character with theme "${prompt.theme}" and attributes ${attributesList}. Reply with ONLY the character's name as JUST a single phrase.`
+  )
+  // name = name.replaceAll(nameIgnoreRegExp, "")  
+  console.log("name:", name)
+  name = name
+    .replaceAll("\"", "")
+    .replaceAll("'", "")
+    .replaceAll(".", "")
+  console.log("name:", name)
+  if (name.length > 20) {
+    name = await createTextCompletion(
+      prelude +
+      `Extract JUST the character name from the following description: "${name}". Reply with ONLY the character's name as JUST a single phrase.`
+    )
+  }
+  console.log("name:", name)
 
   // const abilityString = await ;
   // TODO: randomly choose ability based on attributes
@@ -103,7 +121,7 @@ export async function generateCard(prompt: CardPrompt): Promise<game.Card> {
 
   const abilityDescription = await createTextCompletion(
     prelude +
-    `Write the thematic description of a character "${name}" with the theme "${prompt.theme}", attributes ${attributesList}, ${attackQuality(prompt.attack)} and ${healthQuality(prompt.health)}. Reply with ONLY the one-sentence character description.`
+    `Write the thematic vivid exciting description of the character "${name}" with the theme "${prompt.theme}", attributes ${attributesList}, ${attackQuality(prompt.attack)}, and ${healthQuality(prompt.health)}. Reply with ONLY the one-sentence character description.`
   )
 
   const imagePrompt = await createTextCompletion(
