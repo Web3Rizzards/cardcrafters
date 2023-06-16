@@ -1,6 +1,46 @@
-.menu-page-inner {
+.navbar {
   display: flex;
-  width: 40em;
+
+  flex-direction: row;
+
+  width: 100%;
   margin: auto;
   align-items: center;
+  gap: 3em;
+
+  padding: 1em 2em;
+  box-sizing: border-box;
+
+  
+}
+
+.navbar-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  margin-right: 16px;
+}
+
+.navbar-button {
+  margin-right: 10px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.navbar-button:hover {
+  color: #ff0000;
+}
+
+.navbar-filler {
+  width: 100%;
+
+  flex-grow: 1;
 }
