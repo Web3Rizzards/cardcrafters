@@ -13,6 +13,7 @@ import CardSlot from "../../CardSlot";
 import { useComponentValue } from "@latticexyz/react";
 import { useEntityQuery } from "@latticexyz/react";
 import { useMUD } from "../../../MUDContext";
+import { useRow } from "@latticexyz/react";
 
 type Props = {};
 
@@ -22,7 +23,7 @@ export const Play: React.FC<Props> = (props) => {
   );
 
   const {
-    components: { Counter, Game, Card: Cards },
+    components: { Counter, Game, Card: CardComponent, Owner },
     systemCalls: {
       increment,
       createCard,
@@ -34,7 +35,8 @@ export const Play: React.FC<Props> = (props) => {
   } = useMUD();
 
   const entities = useEntityQuery([
-    HasValue(Cards, { creator: "0x5FbDB2315678afecb367f032d93F642f64180aa3" }),
+    Has(Owner),
+    HasValue(Owner, { creator: "0xdb511450fc0e4ca9e28c8a5a4505d725250aa5e1" }),
   ]);
   console.log("🚀 | entities:", entities);
 

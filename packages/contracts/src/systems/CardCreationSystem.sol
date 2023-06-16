@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 
 import { System } from "@latticexyz/world/src/System.sol";
-import { Card, CardData } from "../codegen/Tables.sol";
+import { Card, CardData, Owner } from "../codegen/Tables.sol";
 import { AbilityType } from "../codegen/Types.sol";
 
 // import erc721
@@ -48,7 +48,7 @@ contract CardCreationSystem is System {
     // Ability value must be greater than 0
     require(abilityValue > 0, "Ability value must be greater than 0");
     // Ability value must be less than 3
-    require(abilityValue < 3, "Ability value must be less than 3");
+    require(abilityValue < 10, "Ability value must be less than 10");
 
     CardData memory card = CardData({
       attack: attack,
@@ -61,5 +61,6 @@ contract CardCreationSystem is System {
     });
     // Cardname is hashed to form the key
     Card.set(keccak256(bytes(cardName)), card);
+    Owner.set(keccak256(bytes(cardName)), _msgSender());
   }
 }

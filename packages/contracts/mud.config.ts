@@ -43,6 +43,11 @@ export default mudConfig({
         winner: "address",
       },
     },
+    Owner: {
+      schema: {
+        creator: "address",
+      },
+    },
     Player: {
       keySchema: { player: "address" },
       schema: {
