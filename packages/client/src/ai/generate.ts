@@ -1,9 +1,8 @@
 import { shuffled } from "ethers/lib/utils";
 import * as game from "../data/game";
-
-// import { createImage, createTextCompletion } from "./generate_text";
 import createTextCompletion from "./generate_text";
-import createImage from "./generate_image";
+// import createImage from "./generate_image";
+import crypto_bro_png from '../public/crypto_bro.png'
 
 import { random, sleep } from "@latticexyz/utils";
 
@@ -131,7 +130,8 @@ export async function generateCard(prompt: CardPrompt): Promise<game.Card> {
     `Write a vivid one-sentence description of the character art for the character "${name}" with theme "${prompt.theme}", attributes ${attributesList}, and character descriptio "${abilityDescription}".`
   );
 
-  const image = await createImage(`${imagePrompt}\n\nfantasy art, character profile, illustration, trending on ArtStation, no AI`);
+  // const image = await createImage(`${imagePrompt}\n\nfantasy art, character profile, illustration, trending on ArtStation, no AI`);
+  const image = crypto_bro_png
 
   return balance({
     name: `${name}-${random(1000, 100)}`,

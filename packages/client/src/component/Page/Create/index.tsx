@@ -1,20 +1,19 @@
 import "./style.css";
 
-import * as Card from "../../Card";
+import Card from "../../Card";
 import * as CardLoadingAnimation from "../../CardLoadingAnimation";
 import * as Controller from "../../Controller";
 import * as Page from "../../Page";
 import * as game from "../../../data/game";
-
-import React, { useContext, useState } from "react";
-
 import Button from "../../Button";
 import { LoadingAnimation } from "../../LoadingAnimation";
 import { lucky } from "./lucky";
 import { shuffled } from "ethers/lib/utils";
-// import { generateDeck } from "../../../ai/generate";
+import { generateDeck } from "../../../ai/generate";
 import { sleep } from "@latticexyz/utils";
 import { useMUD } from "../../../MUDContext";
+
+import React, { useContext, useState } from "react";
 
 const max_prompt_length = 200;
 
@@ -143,7 +142,7 @@ export const Create: React.FC<Props> = (props) => {
                   <div className="create-cards">
                     {[
                       ...cards.map((card, i) => (
-                        <Card.Card key={i} card={card}></Card.Card>
+                        <Card key={i} card={card}></Card>
                       )),
                       <CardLoadingAnimation.CardLoadingAnimation key="loading" />,
                     ]}
@@ -154,10 +153,10 @@ export const Create: React.FC<Props> = (props) => {
               return (
                 <div className="create-cards">
                   {cards.map((card, i) => (
-                    <Card.Card key={i} card={card}></Card.Card>
+                    <Card key={i} card={card}></Card>
                   ))}
                 </div>
-                // <div className='create-cards'>{[...cards.map((card, i) => (<Card.Card key={i} card={card}></Card.Card>)), <CardLoadingAnimation.CardLoadingAnimation />]}</div>
+                // <div className='create-cards'>{[...cards.map((card, i) => (<Card key={i} card={card}></Card>)), <CardLoadingAnimation.CardLoadingAnimation />]}</div>
               );
           }
         })()}
