@@ -32,28 +32,87 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// import { EndpointServiceClient } from '@google-cloud/aiplatform'
-const aiplatform = __importStar(require("@google-cloud/aiplatform"));
-const projectId = 'cardcrafters';
-const location = 'us-central1';
-// aiplatform
-const client = new aiplatform.PredictionServiceClient({
-    apiEndpoint: "us-central1-aiplatform.googleapis.com",
-    projectId,
-});
+const google_auth_library_1 = require("google-auth-library");
+const dotenv = __importStar(require("dotenv"));
+dotenv.config();
+function getAccessToken() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const auth = new google_auth_library_1.GoogleAuth({
+            credentials: {
+                client_email: process.env.client_email,
+                private_key: process.env.private_key
+            },
+            scopes: "https://www.googleapis.com/auth/cloud-platform"
+        });
+        const client = yield auth.getClient();
+        const accessToken = yield client.getAccessToken();
+        const token = accessToken.token;
+        if (token === undefined || token === null)
+            throw new Error("token is undefined or null");
+        return token;
+    });
+}
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
-        // let result = await client.predict({
-        //   // instances: [{stringValue: "hello"}],
-        // })
-        let result = yield client.predict({
-            instances: [{ "stringValue": "hello" }],
-        }, {});
-        console.log("result: ", result);
-        console.log("done");
+        const auth = new google_auth_library_1.GoogleAuth({
+            credentials: {
+                client_email: process.env.client_email,
+                private_key: process.env.private_key
+            },
+            scopes: "https://www.googleapis.com/auth/cloud-platform"
+        });
+        const client = yield auth.getClient();
+        const result = yield client.request({
+            method: 'POST',
+            url: `https://us-central1-aiplatform.googleapis.com/v1/projects/${process.env.project_id}/locations/us-central1/publishers/google/models/text-bison:predict`,
+            data: {
+                instances: [
+                    { "prompt": "Give me ten interview questions for the role of program manager." }
+                ],
+                parameters: {
+                    temperature: 0.2,
+                    maxOutputTokens: 256,
+                    topK: 40,
+                    topP: 0.95
+                }
+            }
+        });
+        let data = result.data;
+        // console.log(result)
+        // console.log((result.data as PredictionData).predictions)
+        data.predictions.forEach(prediction => console.log(prediction.content));
     });
 }
 main();
+// import { EndpointServiceClient } from '@google-cloud/aiplatform'
+// import * as aiplatform from '@google-cloud/aiplatform'
+// const projectId = 'cardcrafters';
+// const location = 'us-central1';
+// aiplatform
+// const endpoint = `projects/${projectId}/locations/${location}/endpoints/${endpointId}`
+// const client = new aiplatform.PredictionServiceClient({
+//   apiEndpoint: "us-central1-aiplatform.googleapis.com",
+//   credentials: {
+//     client_email: "TODO",
+//     private_key: "TODO"
+//   }
+// })
+// async function main(): Promise<void> {
+//   let result = await client.predict({
+//     apiEndpoint: "us-central1-aiplatform.googleapis.com",
+//     instances: [{stringValue: "hello"}],
+//   })
+//   // let result = await client.predict(
+//   //   {
+//   //     instances: [{ "stringValue": "hello" }],
+//   //   },
+//   //   {
+//   //   }
+//   // )
+//   // console.log("result: ", result)
+//   // console.log("done")
+// }
+// main()
 // // Specifies the location of the api endpoint
 // const clientOptions = {
 //   apiEndpoint: 'us-central1-aiplatform.googleapis.com',

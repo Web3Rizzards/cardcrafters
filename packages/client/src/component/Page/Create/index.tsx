@@ -13,44 +13,44 @@ import { generateDeck } from "../../../ai/generate";
 import { sleep } from "@latticexyz/utils";
 import { useMUD } from "../../../MUDContext";
 
-const max_prompt_length = 200;
+const max_prompt_length = 200
 
-type Props = {};
+type Props = {}
 
 type Stage =
   | { case: "awaiting input" }
   | { case: "generating" }
-  | { case: "generated" };
+  | { case: "generated" }
 
 export const Create: React.FC<Props> = (props) => {
   const {
     systemCalls: { createCard },
     network: { singletonEntity },
-  } = useMUD();
+  } = useMUD()
 
   const { controllerState, setControllerState } = useContext(
     Controller.GlobalContext
-  );
+  )
 
-  const [stage, setStage] = useState<Stage>({ case: "awaiting input" });
-  const [prompt, setPrompt] = useState<string>("");
+  const [stage, setStage] = useState<Stage>({ case: "awaiting input" })
+  const [prompt, setPrompt] = useState<string>("")
 
-  const cardsRef: game.Card[] = [];
-  const [cards, setCards] = useState<game.Card[]>(cardsRef);
+  const cardsRef: game.Card[] = []
+  const [cards, setCards] = useState<game.Card[]>(cardsRef)
 
-  const forceUpdate = useForceUpdate();
+  const forceUpdate = useForceUpdate()
 
   const ability2Enum = (ability: string) => {
-    return { Inspire: 2, Damage: 1, Heal: 0, Weaken: 3 }[ability];
-  };
+    return { Inspire: 2, Damage: 1, Heal: 0, Weaken: 3 }[ability]
+  }
 
   return (
     <Page.Page name="create">
       <div className="create-page-inner">
         <button
           onClick={(event) => {
-            console.log("go to page: menu");
-            setControllerState(Controller.setPage("menu")(controllerState));
+            console.log("go to page: menu")
+            setControllerState(Controller.setPage("menu")(controllerState))
           }}
         >
           Menu
@@ -72,11 +72,11 @@ export const Create: React.FC<Props> = (props) => {
                     id="create-promptTextarea"
                     placeholder="your deck's theme"
                     onChange={(event) => {
-                      let prompt = event.target.value;
+                      let prompt = event.target.value
                       if (prompt.length > max_prompt_length)
-                        prompt = prompt.slice(0, max_prompt_length);
-                      setPrompt(prompt);
-                      event.target.value = prompt;
+                        prompt = prompt.slice(0, max_prompt_length)
+                      setPrompt(prompt)
+                      event.target.value = prompt
                     }}
                   />
                   <div className="create-prompt-length-limit">
@@ -85,9 +85,9 @@ export const Create: React.FC<Props> = (props) => {
                   <button
                     className="create-form-submit"
                     onClick={async (event) => {
-                      setStage({ case: "generating" });
+                      setStage({ case: "generating" })
                       await generateDeck({ theme: prompt }, (card) => {
-                        console.log("🚀 | onClick={ | card:", card);
+                        console.log("🚀 | onClick={ | card:", card)
                         // string memory cardName,
                         // uint32 attack,
                         // uint32 health,
@@ -101,20 +101,20 @@ export const Create: React.FC<Props> = (props) => {
                           card.cost,
                           ability2Enum(card.ability.case) as number,
                           card.ability.amount
-                        );
-                        console.log(`Generated card: ${card.name}`);
-                        cardsRef.push(card);
-                        console.log(cardsRef.length);
-                        setCards(cardsRef);
-                        forceUpdate();
-                      });
-                      setStage({ case: "generated" });
+                        )
+                        console.log(`Generated card: ${card.name}`)
+                        cardsRef.push(card)
+                        console.log(cardsRef.length)
+                        setCards(cardsRef)
+                        forceUpdate()
+                      })
+                      setStage({ case: "generated" })
                     }}
                   >
                     Submit
                   </button>
                 </div>
-              );
+              )
             case "generating":
               return (
                 <div className="create-generating">
@@ -129,7 +129,7 @@ export const Create: React.FC<Props> = (props) => {
                     ]}
                   </div>
                 </div>
-              );
+              )
             case "generated":
               return (
                 <div className="create-cards">
@@ -138,18 +138,18 @@ export const Create: React.FC<Props> = (props) => {
                   ))}
                 </div>
                 // <div className='create-cards'>{[...cards.map((card, i) => (<Card.Card key={i} card={card}></Card.Card>)), <CardLoadingAnimation.CardLoadingAnimation />]}</div>
-              );
+              )
           }
         })()}
       </div>
     </Page.Page>
-  );
-};
+  )
+}
 
 //create your forceUpdate hook
 function useForceUpdate() {
-  const [value, setValue] = useState(0); // integer state
-  return () => setValue((value) => value + 1); // update state to force render
+  const [value, setValue] = useState(0) // integer state
+  return () => setValue((value) => value + 1) // update state to force render
   // A function that increment 👆🏻 the previous state like here
   // is better than directly setting `setValue(value + 1)`
 }
