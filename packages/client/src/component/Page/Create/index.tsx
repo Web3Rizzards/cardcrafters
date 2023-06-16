@@ -8,6 +8,7 @@ import * as game from "../../../data/game";
 
 import React, { useContext, useState } from "react";
 
+import Button from "../../Button";
 import { LoadingAnimation } from "../../LoadingAnimation";
 import { generateDeck } from "../../../ai/generate";
 import { sleep } from "@latticexyz/utils";
@@ -56,70 +57,66 @@ export const Create: React.FC<Props> = (props) => {
           Menu
         </button>
 
-        <h2>AI-Powered Deck Generator</h2>
+        {/* <h2>AI-Powered Deck Generator</h2> */}
+
+        <img src="./src/public/craftooors.svg"></img>
+
+        <div className="create-form">
+          <div></div>
+          <textarea
+            className="create-prompt"
+            id="create-promptTextarea"
+            placeholder="Describe a theme, and the AI will generate a deck of cards that are inspired by it..."
+            onChange={(event) => {
+              let prompt = event.target.value;
+              if (prompt.length > max_prompt_length)
+                prompt = prompt.slice(0, max_prompt_length);
+              setPrompt(prompt);
+              event.target.value = prompt;
+            }}
+          />
+          {/* <div className="create-prompt-length-limit">
+                    {prompt.length}/{max_prompt_length}
+                  </div> */}
+          <div className="create-button-container">
+            <Button
+              className="create-form-submit"
+              onClick={async (event) => {
+                setStage({ case: "generating" });
+                await generateDeck({ theme: prompt }, (card) => {
+                  console.log("🚀 | onClick={ | card:", card);
+                  createCard(
+                    card.name,
+                    card.attack,
+                    card.health,
+                    card.cost,
+                    ability2Enum(card.ability.case) as number,
+                    card.ability.amount
+                  );
+                  console.log(`Generated card: ${card.name}`);
+                  cardsRef.push(card);
+                  console.log(cardsRef.length);
+                  setCards(cardsRef);
+                  forceUpdate();
+                });
+                setStage({ case: "generated" });
+              }}
+            >
+              Submit
+            </Button>
+            <Button>{"I'm Feeling Lucky"}</Button>
+          </div>
+        </div>
 
         {(() => {
           switch (stage.case) {
             case "awaiting input":
-              return (
-                <div className="create-form">
-                  <div>
-                    Describe a theme, and the AI will generate a deck of cards
-                    that are inspired by it.
-                  </div>
-                  <textarea
-                    className="create-prompt"
-                    id="create-promptTextarea"
-                    placeholder="your deck's theme"
-                    onChange={(event) => {
-                      let prompt = event.target.value;
-                      if (prompt.length > max_prompt_length)
-                        prompt = prompt.slice(0, max_prompt_length);
-                      setPrompt(prompt);
-                      event.target.value = prompt;
-                    }}
-                  />
-                  <div className="create-prompt-length-limit">
-                    {prompt.length}/{max_prompt_length}
-                  </div>
-                  <button
-                    className="create-form-submit"
-                    onClick={async (event) => {
-                      setStage({ case: "generating" });
-                      await generateDeck({ theme: prompt }, (card) => {
-                        console.log("🚀 | onClick={ | card:", card);
-                        // string memory cardName,
-                        // uint32 attack,
-                        // uint32 health,
-                        // uint32 cost,
-                        // AbilityType abilityType,
-                        // uint32 abilityValue
-                        createCard(
-                          card.name,
-                          card.attack,
-                          card.health,
-                          card.cost,
-                          ability2Enum(card.ability.case) as number,
-                          card.ability.amount
-                        );
-                        console.log(`Generated card: ${card.name}`);
-                        cardsRef.push(card);
-                        console.log(cardsRef.length);
-                        setCards(cardsRef);
-                        forceUpdate();
-                      });
-                      setStage({ case: "generated" });
-                    }}
-                  >
-                    Submit
-                  </button>
-                </div>
-              );
+              return;
             case "generating":
               return (
                 <div className="create-generating">
-                  <p>Generating a deck with the theme:</p>
-                  <p className="create-generating-theme">{prompt}</p>
+                  {/* <p>Generating a deck with the theme:</p> */}
+                  {/* <p className="create-generating-theme">{prompt}</p> */}
                   <div className="create-cards">
                     {[
                       ...cards.map((card, i) => (

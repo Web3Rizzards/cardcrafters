@@ -1,17 +1,47 @@
 import "./style.css";
 
-import React, { ReactNode } from "react";
+import * as Controller from "../../Controller";
+import * as Page from "../../Page";
 
-interface SidebarProps {
-  children: ReactNode;
-}
+import React, { useContext } from "react";
 
-const TopNavBar: React.FC<SidebarProps> = ({ children }) => {
+import Button from "../../Button";
+
+type Props = {};
+
+export const TopNavBar: React.FC<Props> = (props) => {
+  let { controllerState, setControllerState } = useContext(
+    Controller.GlobalContext
+  );
+
   return (
-    <div className="top-navbar">
-      <img src="./public/logo.svg" alt="craftooors"></img>
-    </div>
+    <Page.Page name="menu">
+      <div className="menu-page-inner">
+        <div className="menu-items">
+          <div className="menu-item">
+            <Button
+              onClick={(event) => {
+                console.log("go to page: create");
+                setControllerState(
+                  Controller.setPage("create")(controllerState)
+                );
+              }}
+            >
+              Create
+            </Button>
+          </div>
+          <div className="menu-item">
+            <Button
+              onClick={(event) => {
+                console.log("go to page: play");
+                setControllerState(Controller.setPage("play")(controllerState));
+              }}
+            >
+              Play
+            </Button>
+          </div>
+        </div>
+      </div>
+    </Page.Page>
   );
 };
-
-export default Sidebar;
