@@ -18,6 +18,10 @@ export type DeckPrompt = {
   theme: string;
 };
 
+async function generateDeckCardNames(prompt: DeckPrompt): Promise<string[]> {
+  throw new Error('TODO: generateDeckCardNames')
+}
+
 export async function generateDeck(
   prompt: DeckPrompt,
   onGenerateCard?: (card: game.Card) => void
@@ -27,11 +31,12 @@ export async function generateDeck(
   const cards: game.Card[] = [];
   const promises: Promise<void>[] = []
 
-  async function queueCardGeneration(attributes: string[], abilityType: 'offensive' | 'defensive' | 'skill' | 'special', attack: number, health: number): Promise<void> {
+  async function queueCardGeneration(name: string, attributes: string[], abilityType: 'offensive' | 'defensive' | 'skill' | 'special', attack: number, health: number): Promise<void> {
     async function makeCard(): Promise<void> {
       console.log("starting to generate card")
       const card = await generateCard({
         theme: prompt.theme,
+        name,
         attributes,
         abilityType,
         attack,
@@ -45,30 +50,36 @@ export async function generateDeck(
     promises.push(makeCard())
   }
 
+  const names = await generateDeckCardNames(prompt)
+  let nameIx = 0
+  function nextName(): string { return names[nameIx++] }
+
   if (true) {
-    await queueCardGeneration(["offensive"], 'offensive', random(5, 2), random(4, 1))
-    await queueCardGeneration(["defensive"], 'defensive', random(5, 2), random(4, 1))
-    await queueCardGeneration(["control", "skill", "support"], 'skill', random(3, 2), random(4, 3))
-    await queueCardGeneration(["powerful", "leader", "special"], 'special', random(2, 1), random(2, 1));
+    const names = await generateDeckCardNames(prompt)
+    await queueCardGeneration(nextName(), ["offensive"], 'offensive', random(5, 2), random(4, 1))
+    await queueCardGeneration(nextName(), ["defensive"], 'defensive', random(5, 2), random(4, 1))
+    await queueCardGeneration(nextName(), ["control", "skill", "support"], 'skill', random(3, 2), random(4, 3))
+    await queueCardGeneration(nextName(), ["powerful", "leader", "special"], 'special', random(2, 1), random(2, 1));
   } else {
+
     // offensive cards
     for (let i = 0; i < 4; i++) {
-      await queueCardGeneration(["offensive"], 'offensive', random(5, 2), random(4, 1))
+      await queueCardGeneration(nextName(), ["offensive"], 'offensive', random(5, 2), random(4, 1))
     }
 
     // defensive cards
     for (let i = 0; i < 4; i++) {
-      await queueCardGeneration(["defensive"], 'defensive', random(3, 1), random(7, 4))
+      await queueCardGeneration(nextName(), ["defensive"], 'defensive', random(3, 1), random(7, 4))
     }
 
     // skill cards
     for (let i = 0; i < 4; i++) {
-      await queueCardGeneration(["control", "skill", "support"], 'offensive', random(3, 2), random(4, 3))
+      await queueCardGeneration(nextName(), ["control", "skill", "support"], 'offensive', random(3, 2), random(4, 3))
     }
 
     // special cards
     for (let i = 0; i < 2; i++) {
-      await queueCardGeneration(["powerful", "leader", "special"], 'offensive', random(2, 1), random(2, 1));
+      await queueCardGeneration(nextName(), ["powerful", "leader", "special"], 'offensive', random(2, 1), random(2, 1));
     }
   }
 
@@ -82,6 +93,7 @@ type AbilityType = 'offensive' | 'defensive' | 'skill' | 'special';
 
 export type CardPrompt = {
   theme: string;
+  name: string;
   attributes: string[];
   abilityType: AbilityType,
   attack: number;
@@ -102,19 +114,19 @@ export async function generateCard(prompt: CardPrompt): Promise<game.Card> {
     `Write the name of a new character with theme "${prompt.theme}" and attributes ${attributesList}. Reply with ONLY the character's name as JUST a single phrase.`
   )
 
-  console.log("name:", name)
-  name = name
-    .replaceAll("\"", "")
-    .replaceAll("'", "")
-    .replaceAll(".", "")
-  console.log("name:", name)
-  if (name.length > 20) {
-    name = await createTextCompletion(
-      prelude +
-      `Extract JUST the character name from the following description: "${name}". Reply with ONLY the character's name as JUST a single phrase.`
-    )
-  }
-  console.log("name:", name)
+  // console.log("name:", name)
+  // name = name
+  //   .replaceAll("\"", "")
+  //   .replaceAll("'", "")
+  //   .replaceAll(".", "")
+  // console.log("name:", name)
+  // if (name.length > 20) {
+  //   name = await createTextCompletion(
+  //     prelude +
+  //     `Extract JUST the character name from the following description: "${name}". Reply with ONLY the character's name as JUST a single phrase.`
+  //   )
+  // }
+  // console.log("name:", name)
 
   // const abilityString = await ;
   // TODO: randomly choose ability based on attributes
