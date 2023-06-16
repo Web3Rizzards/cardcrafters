@@ -156,10 +156,8 @@ export const Play: React.FC<Props> = (props) => {
 
           {/* Player 2 Field */}
           <div className="game-field game-playerField">
-            <CardSlot
-              onClick={() => setPlayer2FieldIndex(0)}
-              card={game.exampleCard1}
-            ></CardSlot>
+            {/* <CardSlot onClick={() => setPlayer2FieldIndex(0)} card={game.exampleCard1}></CardSlot> */}
+            <CardSlot onClick={() => setPlayer2FieldIndex(0)}></CardSlot>
             <CardSlot onClick={() => setPlayer2FieldIndex(1)}></CardSlot>
             <CardSlot onClick={() => setPlayer2FieldIndex(2)}></CardSlot>
             <CardSlot onClick={() => setPlayer2FieldIndex(3)}></CardSlot>
@@ -189,8 +187,8 @@ export const Play: React.FC<Props> = (props) => {
 
           {/* Player 2 Hand */}
           <div className="game-hand game-playerHand">
-            <Card card={game.exampleCard1}></Card>
-            <Card card={game.exampleCard1}></Card>
+            {/* <Card card={game.exampleCard1}></Card>
+            <Card card={game.exampleCard1}></Card> */}
           </div>
         </div>
         <div className="game-sidebar game-rightSidebar">
