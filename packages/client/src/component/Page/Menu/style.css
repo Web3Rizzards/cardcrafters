@@ -7,8 +7,25 @@
 
 .title {
   font-size: 2em;
-
+  min-width: 30%;
 }
+
+.fade-in {
+  opacity: 0;
+  animation-name: fade-in-animation;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fade-in-animation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 
 .description {
   font-size: 1rem;

@@ -18,7 +18,7 @@ export const Menu: React.FC<Props> = (props) => {
   return (
     <Page.Page name="menu">
       <Section colour="#4285F4">
-        <div className="title">Welcome, Craftooors!</div>
+        <div className="title fade-in">Welcome, Craftooors!</div>
       </Section>
       <Section colour="#DB4437">
         <div className="title">Unleash Your Creativity</div>
