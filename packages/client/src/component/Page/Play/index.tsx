@@ -67,6 +67,17 @@ export const Play: React.FC<Props> = (props) => {
           <div className="game-hand game-opponentHand">
             <Card card={game.exampleCard1}></Card>
             <Card card={game.exampleCard1}></Card>
+            <Card card={game.exampleCard1}></Card>
+            <Card card={game.exampleCard1}></Card>
+            <Card card={game.exampleCard1}></Card>
+            <Card card={game.exampleCard1}></Card>
+            <Card card={game.exampleCard1}></Card>
+            <Card card={game.exampleCard1}></Card>
+            <Card card={game.exampleCard1}></Card>
+            <Card card={game.exampleCard1}></Card>
+            <Card card={game.exampleCard1}></Card>
+            <Card card={game.exampleCard1}></Card>
+            <Card card={game.exampleCard1}></Card>
           </div>
 
           {/* Opponent's field */}
@@ -100,10 +111,6 @@ export const Play: React.FC<Props> = (props) => {
           </div>
         </div>
         <div className="game-sidebar game-rightSidebar">
-          <div>
-            <b>Right Sidebar</b>
-          </div>
-
           {/* <button>Join Player 1</button>
           <button>Join Player 2</button>
           <button>Forfeit</button>
