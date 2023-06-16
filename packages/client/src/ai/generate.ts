@@ -1,6 +1,9 @@
+import { shuffled } from "ethers/lib/utils";
 import * as game from "../data/game";
 
-import { createImage, createTextCompletion } from "./api";
+// import { createImage, createTextCompletion } from "./generate_text";
+import createTextCompletion from "./generate_text";
+import createImage from "./generate_image";
 
 import { random, sleep } from "@latticexyz/utils";
 
@@ -20,17 +23,22 @@ export async function generateDeck(
   prompt: DeckPrompt,
   onGenerateCard?: (card: game.Card) => void
 ): Promise<game.Card[]> {
+  console.log("[generate] starting to generate deck")
+
   const cards: game.Card[] = [];
   const promises: Promise<void>[] = []
 
-  async function queueCardGeneration(attributes: string[], attack: number, health: number): Promise<void> {
+  async function queueCardGeneration(attributes: string[], abilityType: 'offensive' | 'defensive' | 'skill' | 'special', attack: number, health: number): Promise<void> {
     async function makeCard(): Promise<void> {
+      console.log("starting to generate card")
       const card = await generateCard({
         theme: prompt.theme,
-        attributes: attributes,
-        attack: attack,
-        health: health,
+        attributes,
+        abilityType,
+        attack,
+        health
       });
+      console.log(`finished generating card: ${card.name}`)
       cards.push(card)
       if (onGenerateCard !== undefined) onGenerateCard(card)
     }
@@ -38,65 +46,89 @@ export async function generateDeck(
     promises.push(makeCard())
   }
 
-  // offensive cards
-  for (let i = 0; i < 4; i++) {
-    await queueCardGeneration(["offensive"], random(5, 2), random(4, 1))
-  }
+  if (true) {
+    await queueCardGeneration(["offensive"], 'offensive', random(5, 2), random(4, 1))
+    await queueCardGeneration(["defensive"], 'defensive', random(5, 2), random(4, 1))
+    await queueCardGeneration(["control", "skill", "support"], 'skill', random(3, 2), random(4, 3))
+    await queueCardGeneration(["powerful", "leader", "special"], 'special', random(2, 1), random(2, 1));
+  } else {
+    // offensive cards
+    for (let i = 0; i < 4; i++) {
+      await queueCardGeneration(["offensive"], 'offensive', random(5, 2), random(4, 1))
+    }
 
-  // defensive cards
-  for (let i = 0; i < 4; i++) {
-    await queueCardGeneration(["defensive"], random(3, 1), random(7, 4))
-  }
+    // defensive cards
+    for (let i = 0; i < 4; i++) {
+      await queueCardGeneration(["defensive"], 'defensive', random(3, 1), random(7, 4))
+    }
 
-  // skill cards
-  for (let i = 0; i < 4; i++) {
-    await queueCardGeneration(["control", "skill", "support"], random(3, 2), random(4, 3))
-  }
+    // skill cards
+    for (let i = 0; i < 4; i++) {
+      await queueCardGeneration(["control", "skill", "support"], 'offensive', random(3, 2), random(4, 3))
+    }
 
-  // special cards
-  for (let i = 0; i < 2; i++) {
-    await queueCardGeneration(["powerful", "leader", "special"], random(2, 1), random(2, 1));
+    // special cards
+    for (let i = 0; i < 2; i++) {
+      await queueCardGeneration(["powerful", "leader", "special"], 'offensive', random(2, 1), random(2, 1));
+    }
   }
 
   await Promise.all(promises)
+
+  console.log("[generate] finished generating deck")
   return cards;
 }
+
+type AbilityType = 'offensive' | 'defensive' | 'skill' | 'special';
 
 export type CardPrompt = {
   theme: string;
   attributes: string[];
+  abilityType: AbilityType,
   attack: number;
   health: number;
 };
 
+export const nameIgnoreRegExp: RegExp = /(\.|"|')/
+
 export async function generateCard(prompt: CardPrompt): Promise<game.Card> {
-  // throw new Error('TODO: generateCard')
   const prelude = `You are a deckbuilding game designer.\n\n`;
 
   const attributesList = prompt.attributes
     .map((attr) => `"${attr}"`)
     .join(", ");
 
-  const name = await createTextCompletion(
+  let name = await createTextCompletion(
     prelude +
-    `Write the name of a new card with theme "${prompt.theme}" and attributes ${attributesList}`
-  );
+    `Write the name of a new character with theme "${prompt.theme}" and attributes ${attributesList}. Reply with ONLY the character's name as JUST a single phrase.`
+  )
 
-  const abilityString = await createTextCompletion(
-    prelude +
-    `Write the ability of a new card with the theme "${prompt.theme}", attributes ${attributesList}, and name "${name}"`
-  );
+  console.log("name:", name)
+  name = name
+    .replaceAll("\"", "")
+    .replaceAll("'", "")
+    .replaceAll(".", "")
+  console.log("name:", name)
+  if (name.length > 20) {
+    name = await createTextCompletion(
+      prelude +
+      `Extract JUST the character name from the following description: "${name}". Reply with ONLY the character's name as JUST a single phrase.`
+    )
+  }
+  console.log("name:", name)
 
-  const ability = parseAbility(abilityString);
+  // const abilityString = await ;
+  // TODO: randomly choose ability based on attributes
+  const ability = await generateAbility(prompt.abilityType)
 
   const abilityDescription = await createTextCompletion(
     prelude +
-    `Write an exciting description of the ability "${abilityString}" of the card named "${name}" with theme "${prompt.theme}"`
-  );
+    `Write the thematic vivid exciting description of the character "${name}" with the theme "${prompt.theme}", attributes ${attributesList}, ${attackQuality(prompt.attack)}, and ${healthQuality(prompt.health)}. Reply with ONLY the one-sentence character description.`
+  )
 
   const imagePrompt = await createTextCompletion(
     prelude +
-    `Write a vivid description of the art for a card with the theme "${prompt.theme}", attributes ${attributesList}, name "${name}", and ability "${ability}"`
+    `Write a vivid one-sentence description of the character art for the character "${name}" with theme "${prompt.theme}", attributes ${attributesList}, and character descriptio "${abilityDescription}".`
   );
 
   const image = await createImage(imagePrompt);
@@ -110,6 +142,48 @@ export async function generateCard(prompt: CardPrompt): Promise<game.Card> {
     attack: prompt.attack,
     health: prompt.health,
   });
+}
+
+function attackQuality(attack: number): string {
+  if (attack < 2)
+    return "weak attack"
+  else if (2 <= attack && attack < 4)
+    return "moderate attack"
+  else
+    return "strong attack"
+}
+
+function healthQuality(health: number): string {
+  if (health < 2)
+    return "low health"
+  else if (2 <= health && health < 4)
+    return "moderate health"
+  else
+    return "high health"
+}
+
+async function generateAbility(type: AbilityType): Promise<game.Ability> {
+  switch (type) {
+    case 'offensive': return shuffled([
+      { case: 'Damage', amount: random(5, 2) },
+      { case: 'Inspire', amount: random(5, 2) },
+    ])[0]
+    case 'defensive': return shuffled([
+      { case: 'Heal', amount: random(5, 2) },
+      { case: 'Weaken', amount: random(5, 2) },
+    ])[0]
+    case 'skill': return shuffled([
+      { case: 'Damage', amount: random(5, 2) },
+      { case: 'Heal', amount: random(5, 2) },
+      { case: 'Weaken', amount: random(5, 2) },
+    ])[0]
+    case 'special': return shuffled([
+      { case: 'Damage', amount: random(5, 2) },
+      { case: 'Inspire', amount: random(5, 2) },
+      { case: 'Heal', amount: random(5, 2) },
+      { case: 'Weaken', amount: random(5, 2) },
+    ])[0]
+  }
 }
 
 function parseAbility(abilityString: string): game.Ability {

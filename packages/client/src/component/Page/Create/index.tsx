@@ -13,6 +13,8 @@ import { LoadingAnimation } from "../../LoadingAnimation";
 import { generateDeck } from "../../../ai/generate";
 import { sleep } from "@latticexyz/utils";
 import { useMUD } from "../../../MUDContext";
+import { shuffled } from "ethers/lib/utils";
+import { lucky } from './lucky'
 
 const max_prompt_length = 200;
 
@@ -37,9 +39,20 @@ export const Create: React.FC<Props> = (props) => {
   const [prompt, setPrompt] = useState<string>("");
 
   const cardsRef: game.Card[] = [];
-  const [cards, setCards] = useState<game.Card[]>(cardsRef);
-
+  const [cards, _setCards] = useState<game.Card[]>(cardsRef);
   const forceUpdate = useForceUpdate();
+
+  function addCard(card: game.Card) {
+    cardsRef.push(card)
+    _setCards(cardsRef)
+    forceUpdate()
+  }
+
+  function resetCards() {
+    while (cardsRef.pop()) {}
+    _setCards([])
+    forceUpdate()
+  }
 
   const ability2Enum = (ability: string) => {
     return { Inspire: 2, Damage: 1, Heal: 0, Weaken: 3 }[ability];
@@ -63,9 +76,9 @@ export const Create: React.FC<Props> = (props) => {
 
         <div className="create-form">
           <div></div>
-          <textarea
+          <input
             className="create-prompt"
-            id="create-promptTextarea"
+            id="create-promptInput"
             placeholder="Describe a theme, and the AI will generate a deck of cards that are inspired by it..."
             onChange={(event) => {
               let prompt = event.target.value;
@@ -80,9 +93,10 @@ export const Create: React.FC<Props> = (props) => {
                   </div> */}
           <div className="create-button-container">
             <Button
-              className="create-form-submit"
               onClick={async (event) => {
+                resetCards()
                 setStage({ case: "generating" });
+                
                 await generateDeck({ theme: prompt }, (card) => {
                   console.log("🚀 | onClick={ | card:", card);
                   createCard(
@@ -94,17 +108,22 @@ export const Create: React.FC<Props> = (props) => {
                     card.ability.amount
                   );
                   console.log(`Generated card: ${card.name}`);
-                  cardsRef.push(card);
-                  console.log(cardsRef.length);
-                  setCards(cardsRef);
-                  forceUpdate();
-                });
+                  addCard(card)
+                })
+                
                 setStage({ case: "generated" });
               }}
             >
               Submit
             </Button>
-            <Button>{"I'm Feeling Lucky"}</Button>
+            <Button
+              onClick={async (event) => {
+                const input = document.getElementById('create-promptInput') as HTMLTextAreaElement
+                const value = shuffled(lucky)[0]
+                input.value = value
+                setPrompt(value);
+              }}
+            >{"I'm Feeling Lucky"}</Button>
           </div>
         </div>
 

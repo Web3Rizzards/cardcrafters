@@ -17,14 +17,15 @@ console.log(process.env)
 const auth = new GoogleAuth({
   credentials: {
     client_email: process.env.client_email,
-    private_key: process.env.private_key
+    private_key: process.env.private_key,
   },
+  projectId: process.env.projectId,
   scopes: "https://www.googleapis.com/auth/cloud-platform"
 })
 
 const predictionClient = await auth.getClient()
 
-export async function createTextCompletion(prompt: string): Promise<string> {
+export default async function createTextCompletion(prompt: string): Promise<string> {
   prompt = prompt.trim()
 
   if (false) {
@@ -32,7 +33,7 @@ export async function createTextCompletion(prompt: string): Promise<string> {
   } else {
     const result = await predictionClient.request({
       method: 'POST',
-      url: `https://us-central1-aiplatform.googleapis.com/v1/projects/${process.env.project_id}/locations/us-central1/publishers/google/models/text-bison:predict`,
+      url: `https://us-central1-aiplatform.googleapis.com/v1/projects/${process.env.projectId}/locations/us-central1/publishers/google/models/text-bison:predict`,
       data: {
         instances: [{ "prompt": prompt }],
         parameters: {
@@ -50,9 +51,3 @@ export async function createTextCompletion(prompt: string): Promise<string> {
   }
 }
 
-export async function createImage(prompt: string): Promise<string> {
-  prompt = prompt.trim()
-  // throw new Error('TODO: createImage')
-  await sleep(500)
-  return crypto_bro_png
-}
