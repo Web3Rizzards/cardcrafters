@@ -125,7 +125,7 @@ export const Create: React.FC<Props> = (props) => {
                       ...cards.map((card, i) => (
                         <Card.Card key={i} card={card}></Card.Card>
                       )),
-                      <CardLoadingAnimation.CardLoadingAnimation />,
+                      <CardLoadingAnimation.CardLoadingAnimation key="loading" />,
                     ]}
                   </div>
                 </div>

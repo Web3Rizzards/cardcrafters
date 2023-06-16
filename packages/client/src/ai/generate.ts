@@ -23,7 +23,6 @@ export async function generateDeck(
   const cards: game.Card[] = [];
   const promises: Promise<void>[] = []
 
-
   async function queueCardGeneration(attributes: string[], attack: number, health: number): Promise<void> {
     async function makeCard(): Promise<void> {
       const card = await generateCard({
