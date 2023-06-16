@@ -57,8 +57,6 @@
   gap: 0.5rem;
 
 }
-.game-opponentField {}
-.game-playerField {}
 
 .game-fieldDivider {
   width: 100%;
@@ -66,3 +64,48 @@
   background-color: rgb(155, 155, 155,0.5);
 }
 
+.game-stats {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+}
+
+.health-bar {
+  width: 100%;
+  max-width: 200px;
+  height: 20px;
+  background-color: #e0e0e0;
+  border-radius: 10px;
+  overflow: hidden;
+
+}
+
+.health-bar-fill {
+  display: flex;
+  height: 100%;
+  background-color: #FF8A80;
+  transition: width 0.3s ease-in-out;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+
+}
+
+.health-bar-text {
+  color: #ffffff;
+  font-weight: bold;
+  text-align: center;
+  line-height: 20px;
+}
+
+/* Media Query for Responsive Styles */
+@media (max-width: 480px) {
+  .health-bar {
+    max-width: 100%;
+  }
+}

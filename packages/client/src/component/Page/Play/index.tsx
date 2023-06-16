@@ -80,6 +80,18 @@ export const Play: React.FC<Props> = (props) => {
             <Card card={game.exampleCard1}></Card>
           </div>
 
+          <div className="game-stats">
+            <div className="health-bar">
+              <div
+                className="health-bar-fill"
+                style={{ width: (30 / 30) * 100 + "%" }}
+              >
+                <span className="health-bar-text">{30}</span>
+              </div>
+            </div>
+            <div className="game-stats-mana">0 / 10</div>
+          </div>
+
           {/* Opponent's field */}
           <div className="game-field game-opponentField">
             <CardSlot onClick={() => setTarget(0)}></CardSlot>
@@ -102,6 +114,11 @@ export const Play: React.FC<Props> = (props) => {
             <CardSlot onClick={() => setCardSlot(2)}> </CardSlot>
             <CardSlot onClick={() => setCardSlot(3)}></CardSlot>
             <CardSlot onClick={() => setCardSlot(4)}></CardSlot>
+          </div>
+
+          <div className="game-stats">
+            <div className="game-stats-health">30</div>
+            <div className="game-stats-mana">0 / 10</div>
           </div>
 
           {/* Player's hand */}
