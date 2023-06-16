@@ -21,6 +21,7 @@ export default async function createImage(prompt: string): Promise<string> {
     // prompt: `amazing looking room, Dean Norton style`,
     prompt,
     // apiKey: process.env.dreamstudio_api_key as string,
+    // TODO: this key is disabled -- use the new one in the .env
     apiKey: "sk-zVycyiwCeZtETN80aZJYTo4DNgHPNr5zHnxRAGH8KfouUHTj",
     width: 512,
     height: 512,
