@@ -1,0 +1,3 @@
+[submodule "packages/client/stability-api"]
+	path = packages/client/stability-api
+	url = git@github.com:Stability-AI/api-interfaces.git
