@@ -27,7 +27,6 @@ export type Ability
   | { case: 'Heal', amount: number }
   | { case: 'Weaken', amount: number }
 
-
 export const exampleAbility1: Ability = { case: 'Inspire', amount: 2 }
 
 export const exampleAbilityDescription1: string = "Inspire people with the promised riches of cryptocurency"

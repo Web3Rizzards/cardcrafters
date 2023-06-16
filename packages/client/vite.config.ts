@@ -36,6 +36,7 @@ export default defineConfig({
     'process.env': {
       client_email: process.env.client_email,
       private_key: process.env.private_key,
+      projectId: process.env.projectId,
     }
   }
 });

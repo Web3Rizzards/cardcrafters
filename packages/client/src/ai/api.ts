@@ -17,8 +17,9 @@ console.log(process.env)
 const auth = new GoogleAuth({
   credentials: {
     client_email: process.env.client_email,
-    private_key: process.env.private_key
+    private_key: process.env.private_key,
   },
+  projectId: process.env.projectId,
   scopes: "https://www.googleapis.com/auth/cloud-platform"
 })
 
@@ -32,7 +33,7 @@ export async function createTextCompletion(prompt: string): Promise<string> {
   } else {
     const result = await predictionClient.request({
       method: 'POST',
-      url: `https://us-central1-aiplatform.googleapis.com/v1/projects/${process.env.project_id}/locations/us-central1/publishers/google/models/text-bison:predict`,
+      url: `https://us-central1-aiplatform.googleapis.com/v1/projects/${process.env.projectId}/locations/us-central1/publishers/google/models/text-bison:predict`,
       data: {
         instances: [{ "prompt": prompt }],
         parameters: {
