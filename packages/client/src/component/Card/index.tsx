@@ -22,11 +22,11 @@ const Card: React.FC<Props> = (props) => (
       <div className="card-ability">{props.card.abilityDescription}</div>
     </div>
     <div className="card-footer">
-      <div className="card-attack">{props.card.attack}</div>
+      <div className="card-attack"> <div className="card-attack-inner">{props.card.attack}</div> </div>
       <div className="card-logo">
         <img src="./src/public/card-logo.svg" />
       </div>
-      <div className="card-health">{props.card.health}</div>
+      <div className="card-health"> <div className="card-health-inner">{props.card.health}</div> </div>
     </div>
     {/* </div> */}
   </div>
