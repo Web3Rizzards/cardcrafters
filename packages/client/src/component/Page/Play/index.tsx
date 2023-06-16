@@ -10,20 +10,21 @@ import React, { useContext, useState } from "react";
 import Button from "../../Button";
 import Card from "../../Card";
 import CardSlot from "../../CardSlot";
+import { ethers } from "ethers";
 import { useComponentValue } from "@latticexyz/react";
 import { useEntityQuery } from "@latticexyz/react";
 import { useMUD } from "../../../MUDContext";
 import { useRow } from "@latticexyz/react";
 
-type Props = {};
+type Props = object;
 
 export const Play: React.FC<Props> = (props) => {
-  let { controllerState, setControllerState } = useContext(
+  const { controllerState, setControllerState } = useContext(
     Controller.GlobalContext
   );
 
   const {
-    components: { Counter, Game, Card: CardComponent, Owner },
+    components: { Counter, Game, Card: CardComponent, Owner, Board },
     systemCalls: {
       increment,
       createCard,
@@ -31,14 +32,26 @@ export const Play: React.FC<Props> = (props) => {
       joinPlayer1,
       joinPlayer2,
     },
-    network: { singletonEntity },
+    network: { singletonEntity, playerEntity },
   } = useMUD();
 
-  const entities = useEntityQuery([
-    Has(Owner),
-    HasValue(Owner, { creator: "0xdb511450fc0e4ca9e28c8a5a4505d725250aa5e1" }),
-  ]);
-  console.log("🚀 | entities:", entities);
+  // const { world } = useMUD;
+  // console.log("🚀 | world:", world);
+
+  function getUserAddress(playerEntity: string) {
+    return "0x" + playerEntity.slice(26);
+  }
+  console.log("🚀 | playerEntity:", playerEntity);
+
+  Board.update$.subscribe((update) => {
+    const [nextValue, prevValue] = update.value;
+    console.log("Board updated", update, { nextValue, prevValue });
+  });
+
+  CardComponent.update$.subscribe((update) => {
+    const [nextValue, prevValue] = update.value;
+    console.log("CardComponent updated", update, { nextValue, prevValue });
+  });
 
   const counter = useComponentValue(Counter, singletonEntity);
   const players = useComponentValue(Game, singletonEntity);
@@ -50,9 +63,38 @@ export const Play: React.FC<Props> = (props) => {
   const [player1Card, setPlayer1Card] = useState(0);
   const [player2Card, setPlayer2Card] = useState(0);
 
-  // Given the entity ids get player card details
-  function getPlayerCards(): game.Card[] {}
+  // Get user addr
 
+  const userAddr = getUserAddress(playerEntity);
+  console.log("🚀 | userAddr:", userAddr);
+
+  // Given the entity ids get player card details
+  const playerCardEntities: string[] = useEntityQuery([
+    Has(Owner),
+    HasValue(Owner, { creator: getUserAddress(playerEntity) }),
+  ]);
+  console.log("🚀 | playerCardEntities:", playerCardEntities);
+  function getPlayerCards(playerCardEntities: string[]): game.Card[] {
+    // for (let i = 0; i < playerCardEntities.length; i++) {
+    //   const entity = world.registerEntity({
+    //     id: playerCardEntities[i] as EntityI,
+    //   });
+    //   const card = getComponentValueStrict(
+    //     CardComponent,
+    //     playerCardEntities[i]
+    //   );
+    //   console.log("🚀 | card:", card);
+    // }
+
+    const results = playerCardEntities.map((entity) =>
+      getComponentValueStrict(CardComponent, entity)
+    );
+    console.log("🚀 | getPlayerCards | results:", results);
+
+    return results;
+  }
+
+  getPlayerCards(playerCardEntities);
   return (
     <Page.Page name="play">
       {/* <button onClick={event => {

@@ -27,9 +27,15 @@ type Stage =
 
 export const Create: React.FC<Props> = (props) => {
   const {
+    components: { Card: CardComponent },
     systemCalls: { createCard },
     network: { singletonEntity },
   } = useMUD();
+
+  CardComponent.update$.subscribe((update) => {
+    const [nextValue, prevValue] = update.value;
+    console.log("1. CardComponent updated", update, { nextValue, prevValue });
+  });
 
   const { controllerState, setControllerState } = useContext(
     Controller.GlobalContext
@@ -49,7 +55,7 @@ export const Create: React.FC<Props> = (props) => {
   }
 
   function resetCards() {
-    while (cardsRef.pop()) { }
+    while (cardsRef.pop()) {}
     _setCards([]);
     forceUpdate();
   }
@@ -78,7 +84,7 @@ export const Create: React.FC<Props> = (props) => {
           <div className="create-prompt">
             {/* <span className="create-prompt-prefix">🀛</span> */}
             <span className="create-prompt-prefix">
-              <div style={{display: "inline-block"}}>🃏</div>
+              <div style={{ display: "inline-block" }}>🃏</div>
             </span>
             <input
               id="create-promptInput"
