@@ -1,4 +1,6 @@
-
+:root {
+  --create-prompt-prefix-tilt: 10deg;
+}
 
 .create-page-inner {
   display: flex;
@@ -28,15 +30,54 @@
 
 .create-prompt {
   border-radius: 2em;
-  width: 100%;
+  width: 80%;
   resize: none;
   overflow: auto;
-  padding: 8px 24px 8px 24px;
+  /* padding: 8px 24px 8px 24px; */
   box-sizing: border-box;
+  border: 1px solid rgb(220, 220, 220);
+  padding: 0.5em;
+
 
   align-items: center;
   justify-content: center;
 
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.create-prompt-prefix {
+  font-size: 200%;
+  padding: 0 0.2em;
+}
+
+
+@keyframes xxx {
+  0% {
+    rotate: calc(var(--create-prompt-prefix-tilt));
+  }
+
+  50% {
+    rotate: calc(-1 * var(--create-prompt-prefix-tilt));
+  }
+
+  100% {
+    rotate: calc(var(--create-prompt-prefix-tilt));
+  }
+}
+
+.create-prompt-prefix>div {
+  animation-duration: 1.5s;
+  animation-name: xxx;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+
+.create-prompt>input {
+  outline: none;
+  border: none;
 }
 
 .create-button-container {
