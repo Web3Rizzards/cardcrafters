@@ -1,19 +1,20 @@
 import "./style.css";
 
-import Card from "../../Card";
 import * as CardLoadingAnimation from "../../CardLoadingAnimation";
 import * as Controller from "../../Controller";
 import * as Page from "../../Page";
 import * as game from "../../../data/game";
-import Button from "../../Button";
-import { LoadingAnimation } from "../../LoadingAnimation";
-import { lucky } from "./lucky";
-import { shuffled } from "ethers/lib/utils";
-import { generateDeck } from "../../../ai/generate";
-import { sleep } from "@latticexyz/utils";
-import { useMUD } from "../../../MUDContext";
 
 import React, { useContext, useState } from "react";
+
+import Button from "../../Button";
+import Card from "../../Card";
+import { LoadingAnimation } from "../../LoadingAnimation";
+import { generateDeck } from "../../../ai/generate";
+import { lucky } from "./lucky";
+import { shuffled } from "ethers/lib/utils";
+import { sleep } from "@latticexyz/utils";
+import { useMUD } from "../../../MUDContext";
 
 const max_prompt_length = 200;
 
