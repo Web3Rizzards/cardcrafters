@@ -13,7 +13,7 @@
   
   isolation: isolate;
   background-color: white;
-  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  filter: drop-shadow(0px 6px 6px rgba(0, 0, 0, 0.25));
   border-radius: 0.5em;
   user-select: none;
   overflow: hidden;

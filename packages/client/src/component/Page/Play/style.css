@@ -27,21 +27,21 @@
 
 .game-hand {
   padding: 1rem;
-  justify-content: center;
-  text-align: center;
-  vertical-align: center;
+  
   display: flex;
   flex-direction: row;
   gap: 0.5rem;
+  
   overflow-x: auto;
   background-color: rgb(155, 155, 155);
-
 }
 .game-opponentHand {
   background-color: #DB4437;
+  box-shadow: 0 0 0.5em 0 #000000 inset;
 }
 .game-playerHand {
   background-color: #4285F4;
+  box-shadow: 0 0 6px 0 #000000 inset;
 }
 
 .game-field {
