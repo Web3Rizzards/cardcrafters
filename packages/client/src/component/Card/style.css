@@ -28,6 +28,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
 
   padding: 0px;
   width: 100%;
@@ -37,17 +38,29 @@
 }
 
 .card-cost {
-
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 80px;
+  width: 4em;
+  padding: 0.3em 0;
   height: 100%;
   background: #4285F4;
   color: white;
   font-weight: 700;
 
+}
+
+.card-name {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 1em;
+
+  /* margin-right: 0; */
+  /* text-align: right; */
+  /* padding: 0.3em 0; */
 }
 
 .card-inner {
@@ -61,12 +74,8 @@
   width: 100%;
 }
 
-
-
-
 .card-image {
   width: 100%;
-  height: 10em;
 }
 
 .card-image>img {
@@ -86,41 +95,48 @@
 
 .card-ability {
   /* height: 3em; */
-  padding: 0.4em;
+  padding: 1em 0.4em;
   text-align: center;
   margin: auto;
- 
+  word-break: normal;
+
   overflow-y: scroll;
 }
 
 .card-footer {
   display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
   justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
 }
 
-.card-attack {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 80px;
-  height: 100%;
-  background: #DB4437;
-  color: white;
-  font-weight: 700;
-
-}
-
+.card-attack,
 .card-health {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* justify-content: last baseline; */
+  justify-content: flex-end;
   align-items: center;
-  width: 80px;
-  height: 100%;
-  background: #0F9D58;
-  color: white;
-  font-weight: 700;
-
 }
 
+.card-attack-inner, .card-health-inner {
+  width: 4em;
+  color: white;
+  font-weight: 700;
+  padding: 0.3em 0;
+}
+
+.card-attack-inner {
+  background: #DB4437;
+}
+
+.card-health-inner {
+  background: #0F9D58;
+}
+
+.card-logo {
+  height: calc(2.0em);
+  /* padding-bottom: 0.5em; */
+}
