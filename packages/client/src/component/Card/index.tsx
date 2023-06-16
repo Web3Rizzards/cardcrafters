@@ -10,7 +10,7 @@ type Props = {
 
 const Card: React.FC<Props> = (props) => (
   <div className="card">
-    {/* <div className="card-inner"> */}
+    <div className="card-inner">
     <div className="card-header">
       <div className="card-cost">{props.card.cost}</div>
       <div className="card-name">{props.card.name}</div>
@@ -28,7 +28,7 @@ const Card: React.FC<Props> = (props) => (
       </div>
       <div className="card-health"> <div className="card-health-inner">{props.card.health}</div> </div>
     </div>
-    {/* </div> */}
+    </div>
   </div>
 );
 

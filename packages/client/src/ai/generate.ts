@@ -1,25 +1,14 @@
 import { shuffled } from "ethers/lib/utils";
 import * as game from "../data/game";
 import createTextCompletion from "./generate_text";
-// import createImage from "./generate_image";
-import crypto_bro_png from '../public/crypto_bro.png'
-
+import createImage from "./generate_image";
 import { random, sleep } from "@latticexyz/utils";
-
-/*
-A deck consists of 16 cards, which are all generated using the same _theme_, and has the following distribution of attributes:
-- 6 cards are attack-focused
-- 4 cards are defense-focused
-- 4 cards are ability-focused
-- 2 cards are special, determined by the theme
-*/
 
 export type DeckPrompt = {
   theme: string;
 };
 
 async function generateDeckCardNames(prompt: DeckPrompt): Promise<string[]> {
-  // throw new Error('TODO: generateDeckCardNames')
   return [
     "Crypto Bro",
     "Avatar",
@@ -154,8 +143,7 @@ export async function generateCard(prompt: CardPrompt): Promise<game.Card> {
     `Write a vivid one-sentence description of the character art for the character "${name}" with theme "${prompt.theme}", attributes ${attributesList}, and character descriptio "${abilityDescription}".`
   );
 
-  // const image = await createImage(`${imagePrompt}\n\nfantasy art, character profile, illustration, trending on ArtStation, no AI`);
-  const image = crypto_bro_png
+  const image = await createImage(`${imagePrompt}\n\nfantasy art, character profile, illustration, trending on ArtStation, no AI`)
 
   return balance({
     name: `${name}-${random(1000, 100)}`,
