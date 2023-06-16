@@ -24,7 +24,7 @@ const Card: React.FC<Props> = (props) => (
     <div className="card-footer">
       <div className="card-attack">{props.card.attack}</div>
       <div className="card-logo">
-        <img src="../public/favicon.svg" />
+        <img src="./src/public/card-logo.svg" />
       </div>
       <div className="card-health">{props.card.health}</div>
     </div>

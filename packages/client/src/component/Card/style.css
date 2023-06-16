@@ -75,6 +75,15 @@
   object-fit: fill;
 }
 
+.card-logo {
+  width: 100%;
+  height: 40px;
+}
+
+.card-logo>img {
+  height: 100%;
+}
+
 .card-ability {
   /* height: 3em; */
   padding: 0.4em;
@@ -87,14 +96,31 @@
 .card-footer {
   display: flex;
   justify-content: space-between;
-  padding: 0.4em;
 }
 
 .card-attack {
-  background-color: red;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 100%;
+  background: #DB4437;
+  color: white;
+  font-weight: 700;
+
 }
 
 .card-health {
-  background-color: blue;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 100%;
+  background: #0F9D58;
+  color: white;
+  font-weight: 700;
+
 }
 
