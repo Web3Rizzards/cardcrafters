@@ -16,8 +16,9 @@ const Card: React.FC<Props> = (props) => (
       <div className="card-name">{props.card.name}</div>
     </div>
     <div className="card-image">
+      {/* <img src={props.card.image} alt="CARD IMAGE" draggable={false}></img> */}
+      {/* <img src={`data:image/png;base64, ${props.card.image}`} alt="CARD IMAGE" draggable={false}></img> */}
       <img src={props.card.image} alt="CARD IMAGE" draggable={false}></img>
-      {/* <img src={`"data:image/png;base64, ${props.card.image}`} alt="CARD IMAGE" draggable={false}></img> */}
     </div>
     <div className="card-body">
       <div className="card-ability">{props.card.abilityDescription}</div>

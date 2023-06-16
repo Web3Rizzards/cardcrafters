@@ -42,7 +42,7 @@ export default async function createImage(prompt: string): Promise<string> {
     console.log('Image', buffer, filePath)
 
     const blob = new Blob([buffer], { type: 'image/png' })
-    if (false) {
+    if (true) {
       var reader = new FileReader();
       reader.readAsDataURL(blob);
       reader.onloadend = () => {
