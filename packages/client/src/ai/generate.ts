@@ -2,7 +2,7 @@ import * as game from "../data/game";
 
 import { createImage, createTextCompletion } from "./api";
 
-import { random } from "@latticexyz/utils";
+import { random, sleep } from "@latticexyz/utils";
 
 /*
 A deck consists of 16 cards, which are all generated using the same _theme_, and has the following distribution of attributes:
@@ -21,46 +21,44 @@ export async function generateDeck(
   onGenerateCard?: (card: game.Card) => void
 ): Promise<game.Card[]> {
   const cards: game.Card[] = [];
+  const promises: Promise<void>[] = []
 
-  async function makeCard(
-    attributes: string[],
-    attack: number,
-    health: number
-  ): Promise<void> {
-    const card = await generateCard({
-      theme: prompt.theme,
-      attributes: attributes,
-      attack: attack,
-      health: health,
-    });
-    cards.push(card);
-    if (onGenerateCard !== undefined) onGenerateCard(card);
+  async function queueCardGeneration(attributes: string[], attack: number, health: number): Promise<void> {
+    async function makeCard(): Promise<void> {
+      const card = await generateCard({
+        theme: prompt.theme,
+        attributes: attributes,
+        attack: attack,
+        health: health,
+      });
+      cards.push(card)
+      if (onGenerateCard !== undefined) onGenerateCard(card)
+    }
+    await sleep(100)
+    promises.push(makeCard())
   }
 
   // offensive cards
   for (let i = 0; i < 4; i++) {
-    await makeCard(["offensive"], random(5, 2), random(4, 1));
+    await queueCardGeneration(["offensive"], random(5, 2), random(4, 1))
   }
 
   // defensive cards
   for (let i = 0; i < 4; i++) {
-    await makeCard(["defensive"], random(3, 1), random(7, 4));
+    await queueCardGeneration(["defensive"], random(3, 1), random(7, 4))
   }
 
   // skill cards
   for (let i = 0; i < 4; i++) {
-    await makeCard(["control", "skill", "support"], random(3, 2), random(4, 3));
+    await queueCardGeneration(["control", "skill", "support"], random(3, 2), random(4, 3))
   }
 
   // special cards
   for (let i = 0; i < 2; i++) {
-    await makeCard(
-      ["powerful", "leader", "special"],
-      random(2, 1),
-      random(2, 1)
-    );
+    await queueCardGeneration(["powerful", "leader", "special"], random(2, 1), random(2, 1));
   }
 
+  await Promise.all(promises)
   return cards;
 }
 
@@ -81,24 +79,24 @@ export async function generateCard(prompt: CardPrompt): Promise<game.Card> {
 
   const name = await createTextCompletion(
     prelude +
-      `Write the name of a new card with theme "${prompt.theme}" and attributes ${attributesList}`
+    `Write the name of a new card with theme "${prompt.theme}" and attributes ${attributesList}`
   );
 
   const abilityString = await createTextCompletion(
     prelude +
-      `Write the ability of a new card with the theme "${prompt.theme}", attributes ${attributesList}, and name "${name}"`
+    `Write the ability of a new card with the theme "${prompt.theme}", attributes ${attributesList}, and name "${name}"`
   );
 
   const ability = parseAbility(abilityString);
 
   const abilityDescription = await createTextCompletion(
     prelude +
-      `Write an exciting description of the ability "${abilityString}" of the card named "${name}" with theme "${prompt.theme}"`
+    `Write an exciting description of the ability "${abilityString}" of the card named "${name}" with theme "${prompt.theme}"`
   );
 
   const imagePrompt = await createTextCompletion(
     prelude +
-      `Write a vivid description of the art for a card with the theme "${prompt.theme}", attributes ${attributesList}, name "${name}", and ability "${ability}"`
+    `Write a vivid description of the art for a card with the theme "${prompt.theme}", attributes ${attributesList}, name "${name}", and ability "${ability}"`
   );
 
   const image = await createImage(imagePrompt);

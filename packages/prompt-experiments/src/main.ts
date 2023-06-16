@@ -1,63 +1,59 @@
-// import { EndpointServiceClient } from '@google-cloud/aiplatform'
-import * as aiplatform from '@google-cloud/aiplatform'
+import { GoogleAuth } from 'google-auth-library'
 
-const projectId = 'cardcrafters';
-const location = 'us-central1';
+import * as dotenv from 'dotenv'
+dotenv.config()
 
-// aiplatform
+async function getAccessToken(): Promise<string> {
+  const auth = new GoogleAuth({
+    credentials: {
+      client_email: process.env.client_email,
+      private_key: process.env.private_key
+    },
+    scopes: "https://www.googleapis.com/auth/cloud-platform"
+  })
+  const client = await auth.getClient()
+  const accessToken = await client.getAccessToken()
+  const token = accessToken.token
+  if (token === undefined || token === null) throw new Error("token is undefined or null")
+  return token
+}
 
-const client = new aiplatform.PredictionServiceClient({
-  apiEndpoint: "us-central1-aiplatform.googleapis.com",
-  projectId,
-})
+type Prediction = {
+  content: string
+}
+
+type PredictionData = {
+  predictions: Prediction[]
+}
 
 async function main(): Promise<void> {
-  let result = await client.predict({
-    instances: [{stringValue: "hello"}],
+  const auth = new GoogleAuth({
+    credentials: {
+      client_email: process.env.client_email,
+      private_key: process.env.private_key
+    },
+    scopes: "https://www.googleapis.com/auth/cloud-platform"
   })
-  // let result = await client.predict(
-  //   {
-  //     instances: [{ "stringValue": "hello" }],
-  //   },
-  //   {
-  //   }
-  // )
-  // console.log("result: ", result)
-
-  // console.log("done")
+  const client = await auth.getClient()
+  const result = await client.request({
+    method: 'POST',
+    url: `https://us-central1-aiplatform.googleapis.com/v1/projects/${process.env.project_id}/locations/us-central1/publishers/google/models/text-bison:predict`,
+    data: {
+      instances: [
+        { "prompt": "Give me ten interview questions for the role of program manager." }
+      ],
+      parameters: {
+        temperature: 0.2,
+        maxOutputTokens: 256,
+        topK: 40,
+        topP: 0.95
+      }
+    }
+  })
+  let data = result.data as PredictionData
+  // console.log(result)
+  // console.log((result.data as PredictionData).predictions)
+  data.predictions.forEach(prediction => console.log(prediction.content))
 }
 
 main()
-
-// // Specifies the location of the api endpoint
-// const clientOptions = {
-//   apiEndpoint: 'us-central1-aiplatform.googleapis.com',
-// };
-
-// const client = new aiplatform.EndpointServiceClient(clientOptions);
-
-// async function listEndpoints() {
-//   // Configure the parent resource
-//   const parent = `projects/${projectId}/locations/${location}`;
-//   const request = {
-//     parent,
-//   };
-
-//   // Get and print out a list of all the endpoints for this resource
-//   const [result] = await client.listEndpoints(request);
-//   console.log("result: ", result)
-//   for (const endpoint of result) {
-//     console.log(`\nEndpoint name: ${endpoint.name}`);
-//     console.log(`Display name: ${endpoint.displayName}`);
-//     if (endpoint.deployedModels !== null && endpoint.deployedModels !== undefined && endpoint.deployedModels[0]) {
-//       console.log(
-//         `First deployed model: ${endpoint.deployedModels[0].model}`
-//       );
-//     } else {
-//       console.log(
-//         `No deployed models.`
-//       )
-//     }
-//   }
-// }
-// listEndpoints();
