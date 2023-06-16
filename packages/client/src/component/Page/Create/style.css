@@ -78,6 +78,7 @@
 .create-prompt>input {
   outline: none;
   border: none;
+  width: 100%;
 }
 
 .create-button-container {
@@ -93,7 +94,6 @@
 /* .create-prompt::placeholder {
   padding: 8px 24px 8px 24px;
 } */
-
 
 .create-form-submit {
   width: 10em;
