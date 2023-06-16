@@ -8,7 +8,7 @@ var GenerationService = (function () {
   function GenerationService() {}
   GenerationService.serviceName = "gooseai.GenerationService";
   return GenerationService;
-}());
+})();
 
 GenerationService.Generate = {
   methodName: "Generate",
@@ -16,7 +16,7 @@ GenerationService.Generate = {
   requestStream: false,
   responseStream: true,
   requestType: generation_pb.Request,
-  responseType: generation_pb.Answer
+  responseType: generation_pb.Answer,
 };
 
 GenerationService.ChainGenerate = {
@@ -25,7 +25,7 @@ GenerationService.ChainGenerate = {
   requestStream: false,
   responseStream: true,
   requestType: generation_pb.ChainRequest,
-  responseType: generation_pb.Answer
+  responseType: generation_pb.Answer,
 };
 
 exports.GenerationService = GenerationService;
@@ -35,11 +35,14 @@ function GenerationServiceClient(serviceHost, options) {
   this.options = options || {};
 }
 
-GenerationServiceClient.prototype.generate = function generate(requestMessage, metadata) {
+GenerationServiceClient.prototype.generate = function generate(
+  requestMessage,
+  metadata
+) {
   var listeners = {
     data: [],
     end: [],
-    status: []
+    status: [],
   };
   var client = grpc.invoke(GenerationService.Generate, {
     request: requestMessage,
@@ -60,7 +63,7 @@ GenerationServiceClient.prototype.generate = function generate(requestMessage, m
         handler({ code: status, details: statusMessage, metadata: trailers });
       });
       listeners = null;
-    }
+    },
   });
   return {
     on: function (type, handler) {
@@ -70,15 +73,18 @@ GenerationServiceClient.prototype.generate = function generate(requestMessage, m
     cancel: function () {
       listeners = null;
       client.close();
-    }
+    },
   };
 };
 
-GenerationServiceClient.prototype.chainGenerate = function chainGenerate(requestMessage, metadata) {
+GenerationServiceClient.prototype.chainGenerate = function chainGenerate(
+  requestMessage,
+  metadata
+) {
   var listeners = {
     data: [],
     end: [],
-    status: []
+    status: [],
   };
   var client = grpc.invoke(GenerationService.ChainGenerate, {
     request: requestMessage,
@@ -99,7 +105,7 @@ GenerationServiceClient.prototype.chainGenerate = function chainGenerate(request
         handler({ code: status, details: statusMessage, metadata: trailers });
       });
       listeners = null;
-    }
+    },
   });
   return {
     on: function (type, handler) {
@@ -109,9 +115,8 @@ GenerationServiceClient.prototype.chainGenerate = function chainGenerate(request
     cancel: function () {
       listeners = null;
       client.close();
-    }
+    },
   };
 };
 
 exports.GenerationServiceClient = GenerationServiceClient;
-

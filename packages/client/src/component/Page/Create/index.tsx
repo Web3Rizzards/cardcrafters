@@ -10,11 +10,11 @@ import React, { useContext, useState } from "react";
 
 import Button from "../../Button";
 import { LoadingAnimation } from "../../LoadingAnimation";
-import { generateDeck } from "../../../ai/generate";
+import { lucky } from "./lucky";
+import { shuffled } from "ethers/lib/utils";
+// import { generateDeck } from "../../../ai/generate";
 import { sleep } from "@latticexyz/utils";
 import { useMUD } from "../../../MUDContext";
-import { shuffled } from "ethers/lib/utils";
-import { lucky } from './lucky'
 
 const max_prompt_length = 200;
 
@@ -43,15 +43,15 @@ export const Create: React.FC<Props> = (props) => {
   const forceUpdate = useForceUpdate();
 
   function addCard(card: game.Card) {
-    cardsRef.push(card)
-    _setCards(cardsRef)
-    forceUpdate()
+    cardsRef.push(card);
+    _setCards(cardsRef);
+    forceUpdate();
   }
 
   function resetCards() {
     while (cardsRef.pop()) {}
-    _setCards([])
-    forceUpdate()
+    _setCards([]);
+    forceUpdate();
   }
 
   const ability2Enum = (ability: string) => {
@@ -94,9 +94,9 @@ export const Create: React.FC<Props> = (props) => {
           <div className="create-button-container">
             <Button
               onClick={async (event) => {
-                resetCards()
+                resetCards();
                 setStage({ case: "generating" });
-                
+
                 await generateDeck({ theme: prompt }, (card) => {
                   console.log("🚀 | onClick={ | card:", card);
                   createCard(
@@ -108,9 +108,9 @@ export const Create: React.FC<Props> = (props) => {
                     card.ability.amount
                   );
                   console.log(`Generated card: ${card.name}`);
-                  addCard(card)
-                })
-                
+                  addCard(card);
+                });
+
                 setStage({ case: "generated" });
               }}
             >
@@ -118,12 +118,16 @@ export const Create: React.FC<Props> = (props) => {
             </Button>
             <Button
               onClick={async (event) => {
-                const input = document.getElementById('create-promptInput') as HTMLTextAreaElement
-                const value = shuffled(lucky)[0]
-                input.value = value
+                const input = document.getElementById(
+                  "create-promptInput"
+                ) as HTMLTextAreaElement;
+                const value = shuffled(lucky)[0];
+                input.value = value;
                 setPrompt(value);
               }}
-            >{"I'm Feeling Lucky"}</Button>
+            >
+              {"I'm Feeling Lucky"}
+            </Button>
           </div>
         </div>
 
