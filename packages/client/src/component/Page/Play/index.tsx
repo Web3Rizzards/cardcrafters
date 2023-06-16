@@ -9,6 +9,7 @@ import React, { useContext, useState } from "react";
 
 import Button from "../../Button";
 import Card from "../../Card";
+import CardSlot from "../../CardSlot";
 import { useComponentValue } from "@latticexyz/react";
 import { useEntityQuery } from "@latticexyz/react";
 import { useMUD } from "../../../MUDContext";
@@ -68,15 +69,26 @@ export const Play: React.FC<Props> = (props) => {
 
           {/* Opponent's field */}
           <div className="game-field game-opponentField">
-            <Card card={game.exampleCard1}></Card>
-            <Card card={game.exampleCard1}></Card>
+            <CardSlot onClick={() => setTarget(0)}></CardSlot>
+            <CardSlot onClick={() => setTarget(1)}></CardSlot>
+            <CardSlot onClick={() => setTarget(2)}></CardSlot>
+            <CardSlot onClick={() => setTarget(3)}></CardSlot>
+            <CardSlot onClick={() => setTarget(4)}></CardSlot>
           </div>
           <div className="game-fieldDivider"></div>
 
           {/* Player's field */}
           <div className="game-field game-playerField">
-            <Card card={game.exampleCard1}></Card>
-            <Card card={game.exampleCard1}></Card>
+            <CardSlot
+              onClick={() => {
+                setCardSlot(0);
+                console.log("XXX");
+              }}
+            ></CardSlot>
+            <CardSlot onClick={() => setCardSlot(1)}></CardSlot>
+            <CardSlot onClick={() => setCardSlot(2)}> </CardSlot>
+            <CardSlot onClick={() => setCardSlot(3)}></CardSlot>
+            <CardSlot onClick={() => setCardSlot(4)}></CardSlot>
           </div>
 
           {/* Player's hand */}
@@ -108,19 +120,21 @@ export const Play: React.FC<Props> = (props) => {
             </div>
             <div>
               Card Slot (0 to 4)
-              <input
+              {cardSlot}
+              {/* <input
                 onChange={(e) => {
                   setCardSlot(Number(e.target.value));
                 }}
-              ></input>
+              ></input> */}
             </div>
             <div>
               Target (0 to 4)
-              <input
+              {target}
+              {/* <input
                 onChange={(e) => {
                   setTarget(Number(e.target.value));
                 }}
-              ></input>
+              ></input> */}
             </div>
 
             <div>Player 1 Health:</div>

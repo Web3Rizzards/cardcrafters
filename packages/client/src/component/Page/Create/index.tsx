@@ -10,9 +10,9 @@ import React, { useContext, useState } from "react";
 
 import Button from "../../Button";
 import { LoadingAnimation } from "../../LoadingAnimation";
+import { generateDeck } from "../../../ai/generate";
 import { lucky } from "./lucky";
 import { shuffled } from "ethers/lib/utils";
-// import { generateDeck } from "../../../ai/generate";
 import { sleep } from "@latticexyz/utils";
 import { useMUD } from "../../../MUDContext";
 
