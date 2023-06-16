@@ -25,7 +25,7 @@ const auth = new GoogleAuth({
 
 const predictionClient = await auth.getClient()
 
-export async function createTextCompletion(prompt: string): Promise<string> {
+export default async function createTextCompletion(prompt: string): Promise<string> {
   prompt = prompt.trim()
 
   if (false) {
@@ -51,9 +51,3 @@ export async function createTextCompletion(prompt: string): Promise<string> {
   }
 }
 
-export async function createImage(prompt: string): Promise<string> {
-  prompt = prompt.trim()
-  // throw new Error('TODO: createImage')
-  await sleep(500)
-  return crypto_bro_png
-}

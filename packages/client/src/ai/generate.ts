@@ -1,7 +1,9 @@
 import { shuffled } from "ethers/lib/utils";
 import * as game from "../data/game";
 
-import { createImage, createTextCompletion } from "./api";
+// import { createImage, createTextCompletion } from "./generate_text";
+import createTextCompletion from "./generate_text";
+import createImage from "./generate_image";
 
 import { random, sleep } from "@latticexyz/utils";
 
@@ -100,7 +102,7 @@ export async function generateCard(prompt: CardPrompt): Promise<game.Card> {
     prelude +
     `Write the name of a new character with theme "${prompt.theme}" and attributes ${attributesList}. Reply with ONLY the character's name as JUST a single phrase.`
   )
-  // name = name.replaceAll(nameIgnoreRegExp, "")  
+
   console.log("name:", name)
   name = name
     .replaceAll("\"", "")
@@ -126,7 +128,7 @@ export async function generateCard(prompt: CardPrompt): Promise<game.Card> {
 
   const imagePrompt = await createTextCompletion(
     prelude +
-    `Write a vivid one-sentence description of the art for a card with the theme "${prompt.theme}", attributes ${attributesList}, name "${name}", and ability "${ability}"`
+    `Write a vivid one-sentence description of the character art for the character "${name}" with theme "${prompt.theme}", attributes ${attributesList}, and character descriptio "${abilityDescription}".`
   );
 
   const image = await createImage(imagePrompt);
