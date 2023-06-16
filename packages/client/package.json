@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "@ethersproject/providers": "^5.7.2",
+    "@improbable-eng/grpc-web": "^0.15.0",
+    "@improbable-eng/grpc-web-node-http-transport": "^0.15.0",
     "@latticexyz/common": "2.0.0-alpha.1.212+22efa6ed",
     "@latticexyz/dev-tools": "2.0.0-alpha.1.212+22efa6ed",
     "@latticexyz/network": "2.0.0-alpha.1.212+22efa6ed",
@@ -27,6 +29,8 @@
     "dotenv": "^16.1.4",
     "ethers": "^5.7.2",
     "google-auth-library": "^8.8.0",
+    "google-protobuf": "^3.21.2",
+    "grpc": "^1.24.11",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
