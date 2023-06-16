@@ -97,21 +97,9 @@ export const Play: React.FC<Props> = (props) => {
   getPlayerCards(playerCardEntities);
   return (
     <Page.Page name="play">
-      {/* <button onClick={event => {
-        console.log("go to page: menu")
-        setControllerState(Controller.setPage('menu')(controllerState))
-      }}>Menu</button> */}
-
-      {/* <div>This is the "play" page</div> */}
       <div className="game">
-        {/* <div className="game-sidebar game-leftSidebar">
-          <div>
-            <b>Left Sidebar</b>
-          </div>
-          <div>Available cards</div>
-        </div> */}
         <div className="game-center">
-          {/* Opponent's hand */}
+          {/* Player 1 Hand */}
           <div className="game-hand game-opponentHand">
             {}
             <Card card={game.exampleCard1}></Card>
@@ -142,7 +130,7 @@ export const Play: React.FC<Props> = (props) => {
             <div className="game-stats-mana">0 / 10</div>
           </div>
 
-          {/* Player 1 field */}
+          {/* Player 1 Field */}
           <div className="game-field game-opponentField">
             <CardSlot
               onClick={() => {
@@ -155,9 +143,11 @@ export const Play: React.FC<Props> = (props) => {
             <CardSlot onClick={() => setPlayer1FieldIndex(3)}></CardSlot>
             <CardSlot onClick={() => setPlayer1FieldIndex(4)}></CardSlot>
           </div>
+
+          {/* Divider */}
           <div className="game-fieldDivider"></div>
 
-          {/* Player 2 field */}
+          {/* Player 2 Field */}
           <div className="game-field game-playerField">
             <CardSlot
               onClick={() => setPlayer2FieldIndex(0)}
@@ -182,7 +172,7 @@ export const Play: React.FC<Props> = (props) => {
             <div className="game-stats-mana">0 / 10</div>
           </div>
 
-          {/* Player 2 hand */}
+          {/* Player 2 Hand */}
           <div className="game-hand game-playerHand">
             <Card card={game.exampleCard1}></Card>
             <Card card={game.exampleCard1}></Card>
