@@ -25,3 +25,33 @@
   transform: translateY(2px);
   border-bottom-width: 2px;
 }
+
+.join {
+  font-family: Poppins, sans-serif;
+  font-weight: 300;
+
+  color: black;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 24px;
+  gap: 10px;
+  background: #ffffff22;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  height: 4em;
+  user-select: none;
+  transition: background-color 0.3s, transform 0.3s, border-bottom-width 0.3s;
+}
+
+.join:hover {
+  background: #ffffff88;
+}
+
+.join:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}

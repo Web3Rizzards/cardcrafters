@@ -18,6 +18,9 @@ import { useRow } from "@latticexyz/react";
 
 type Props = object;
 
+//Zero Address
+const zeroAddress = ethers.constants.AddressZero;
+
 export const Play: React.FC<Props> = (props) => {
   const { controllerState, setControllerState } = useContext(
     Controller.GlobalContext
@@ -69,23 +72,22 @@ export const Play: React.FC<Props> = (props) => {
   console.log("🚀 | userAddr:", userAddr);
 
   // Given the entity ids get player card details
-  const playerCardEntities: string[] = useEntityQuery([
+  const player1CardEntities: string[] = useEntityQuery([
     Has(Owner),
-    HasValue(Owner, { creator: getUserAddress(playerEntity) }),
+    HasValue(Owner, { creator: players?.player1 }),
   ]);
-  console.log("🚀 | playerCardEntities:", playerCardEntities);
-  function getPlayerCards(playerCardEntities: string[]): game.Card[] {
-    // for (let i = 0; i < playerCardEntities.length; i++) {
-    //   const entity = world.registerEntity({
-    //     id: playerCardEntities[i] as EntityI,
-    //   });
-    //   const card = getComponentValueStrict(
-    //     CardComponent,
-    //     playerCardEntities[i]
-    //   );
-    //   console.log("🚀 | card:", card);
-    // }
 
+  const player2CardEntities: string[] = useEntityQuery([
+    Has(Owner),
+    HasValue(Owner, { creator: players?.player2 }),
+  ]);
+
+  console.log(players?.player1);
+  console.log(players?.player2);
+  console.log("🚀 | playerCardEntities:", player1CardEntities);
+  console.log("🚀 | playerCardEntities:", player2CardEntities);
+
+  function getPlayerCards(playerCardEntities: string[]): game.Card[] {
     const results = playerCardEntities.map((entity) =>
       getComponentValueStrict(CardComponent, entity)
     );
@@ -94,7 +96,7 @@ export const Play: React.FC<Props> = (props) => {
     return results;
   }
 
-  getPlayerCards(playerCardEntities);
+  // getPlayerCards(playerCardEntities);
   return (
     <Page.Page name="play">
       <div className="game">
@@ -105,12 +107,12 @@ export const Play: React.FC<Props> = (props) => {
 
             {players?.player1 ? (
               // <div className="game-hand-cards">
-              getPlayerCards(playerCardEntities).map((card, index) => (
+              getPlayerCards(player1CardEntities).map((card, index) => (
                 <Card key={index} card={card}></Card>
               ))
             ) : (
               // </div>
-              <Button onClick={() => joinPlayer1()}>
+              <Button onClick={() => joinPlayer1()} className="join">
                 {players?.player1 ? players?.player1 : "Join player 1"}
               </Button>
             )}
@@ -189,21 +191,30 @@ export const Play: React.FC<Props> = (props) => {
 
           {/* Player 2 Hand */}
           <div className="game-hand game-playerHand">
-            <Card card={game.exampleCard1}></Card>
-            <Card card={game.exampleCard1}></Card>
+            {/* Show Join button if player 1, else show the cards */}
+
+            {players?.player2 && players?.player2 !== zeroAddress ? (
+              // <div className="game-hand-cards">
+              getPlayerCards(player2CardEntities).map((card, index) => (
+                <Card key={index} card={card}></Card>
+              ))
+            ) : (
+              // </div>
+              <Button onClick={() => joinPlayer2()} className="join">
+                {players?.player2 && players?.player2 !== zeroAddress
+                  ? players?.player2
+                  : "Join player 2"}
+              </Button>
+            )}
           </div>
         </div>
+
+        {/* Right Sidebar */}
         <div className="game-sidebar game-rightSidebar">
           <div>
             <div>Player 1 Field Index (0 to 4): {player1FieldIndex}</div>
             <div>Player 2 Field Index (0 to 4): {player2FieldIndex}</div>
 
-            <Button onClick={() => joinPlayer1()}>
-              {players?.player1 ? players?.player1 : "Join player 1"}
-            </Button>
-            <Button onClick={() => joinPlayer2()}>
-              {players?.player2 ? players?.player2 : "Join player 2"}
-            </Button>
             <Button onClick={() => summonCard(name, Number(player1FieldIndex))}>
               Summon Card
             </Button>

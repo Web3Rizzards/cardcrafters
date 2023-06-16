@@ -38,10 +38,12 @@
 .game-opponentHand {
   background-color: #DB4437;
   box-shadow: 0 0 0.5em 0 #000000 inset;
+  min-height: 290px;
 }
 .game-playerHand {
   background-color: #4285F4;
   box-shadow: 0 0 6px 0 #000000 inset;
+  min-height: 290px;
 }
 
 .game-field {
