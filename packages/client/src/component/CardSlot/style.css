@@ -5,6 +5,8 @@
 .card-slot {
   font-family: 'Poppins', sans-serif;
 
+  font-size: 10pt;
+
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -22,6 +24,10 @@
   transition: background-color 0.1s;
 
   cursor: pointer;
+  width: 12em;
+  min-width: 12em;
+  height: calc(1.818 * 12em);
+
 
 }
 

@@ -2,6 +2,7 @@
 .card {
   font-size: 10pt;
   width: 12em;
+  min-width: 12em;
   height: calc(1.818 * 12em);
 
   box-sizing: border-box;

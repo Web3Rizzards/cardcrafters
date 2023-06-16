@@ -3,7 +3,6 @@
   flex-direction: row;
   /* padding: 1em; */
   gap: 1em;
-  max-width: 2296px;
 }
 
 .game-sidebar {
@@ -23,7 +22,7 @@
   flex-grow: 1;
   justify-content: center;
   text-align: center;
-  max-width: 1400px;
+  max-width: 60em;
 }
 
 .game-hand {
