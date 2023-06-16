@@ -19,7 +19,19 @@ export type DeckPrompt = {
 };
 
 async function generateDeckCardNames(prompt: DeckPrompt): Promise<string[]> {
-  throw new Error('TODO: generateDeckCardNames')
+  // throw new Error('TODO: generateDeckCardNames')
+  return [
+    "Crypto Bro",
+    "Avatar",
+    "NFT",
+    "DAO",
+    "DeFi",
+    "Yield Farming",
+    "Liquidity Pool",
+    "Staking",
+    "Governance",
+    "Smart Contract"
+  ]
 }
 
 export async function generateDeck(
