@@ -1,6 +1,5 @@
 import "./style.css";
 
-import * as Card from "../../Card";
 import * as Controller from "../../Controller";
 import * as Page from "../../Page";
 import * as game from "../../../data/game";
@@ -9,6 +8,7 @@ import { Has, HasValue, getComponentValueStrict } from "@latticexyz/recs";
 import React, { useContext, useState } from "react";
 
 import Button from "../../Button";
+import Card from "../../Card";
 import { useComponentValue } from "@latticexyz/react";
 import { useEntityQuery } from "@latticexyz/react";
 import { useMUD } from "../../../MUDContext";
@@ -62,27 +62,27 @@ export const Play: React.FC<Props> = (props) => {
         <div className="game-center">
           {/* Opponent's hand */}
           <div className="game-hand game-opponentHand">
-            <Card.Card card={game.exampleCard1}></Card.Card>
-            <Card.Card card={game.exampleCard1}></Card.Card>
+            <Card card={game.exampleCard1}></Card>
+            <Card card={game.exampleCard1}></Card>
           </div>
 
           {/* Opponent's field */}
           <div className="game-field game-opponentField">
-            <Card.Card card={game.exampleCard1}></Card.Card>
-            <Card.Card card={game.exampleCard1}></Card.Card>
+            <Card card={game.exampleCard1}></Card>
+            <Card card={game.exampleCard1}></Card>
           </div>
           <div className="game-fieldDivider"></div>
 
           {/* Player's field */}
           <div className="game-field game-playerField">
-            <Card.Card card={game.exampleCard1}></Card.Card>
-            <Card.Card card={game.exampleCard1}></Card.Card>
+            <Card card={game.exampleCard1}></Card>
+            <Card card={game.exampleCard1}></Card>
           </div>
 
           {/* Player's hand */}
           <div className="game-hand game-playerHand">
-            <Card.Card card={game.exampleCard1}></Card.Card>
-            <Card.Card card={game.exampleCard1}></Card.Card>
+            <Card card={game.exampleCard1}></Card>
+            <Card card={game.exampleCard1}></Card>
           </div>
         </div>
         <div className="game-sidebar game-rightSidebar">

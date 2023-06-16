@@ -3,30 +3,51 @@
 }
 
 .card {
-
+  font-family: 'Poppins', sans-serif;
 
   box-sizing: border-box;
-
-
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 0px;
-  isolation: isolate;
-
-  position: absolute;
   width: 300px;
-  height: 460px;
-  left: 418px;
-  top: 291px;
-
-  border: 63px solid #000000;
+  isolation: isolate;
+  background-color: white;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
   border-radius: 12px;
+  user-select: none;
+  overflow: hidden;
 }
 
-.card * {
+/* .card * {
   user-select: none;
+} */
+
+.card-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  padding: 0px;
+  width: 100%;
+  height: 40px;
+  gap: 1em;
+
+}
+
+.card-cost {
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 100%;
+  background: #4285F4;
+  color: white;
+  font-weight: 700;
+
 }
 
 .card-inner {
@@ -40,17 +61,8 @@
   width: 100%;
 }
 
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.4em;
-}
 
-.card-name {}
 
-.card-cost {
-  background-color: green;
-}
 
 .card-image {
   width: 100%;
@@ -86,11 +98,3 @@
   background-color: blue;
 }
 
-.card-attack,
-.card-health,
-.card-cost {
-  /* font-size: 80%; */
-  color: white;
-  padding: 0 0.4em;
-  border-radius: 1em;
-}

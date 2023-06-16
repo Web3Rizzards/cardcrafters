@@ -1,4 +1,7 @@
 .button {
+  font-family: Poppins, sans-serif;
+  font-weight: 300;
+
   display: flex;
   flex-direction: row;
   align-items: center;
