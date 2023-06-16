@@ -48,14 +48,14 @@ export const Create: React.FC<Props> = (props) => {
   return (
     <Page.Page name="create">
       <div className="create-page-inner">
-        <button
+        {/* <button
           onClick={(event) => {
             console.log("go to page: menu");
             setControllerState(Controller.setPage("menu")(controllerState));
           }}
         >
           Menu
-        </button>
+        </button> */}
 
         {/* <h2>AI-Powered Deck Generator</h2> */}
 

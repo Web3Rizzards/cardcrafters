@@ -1,47 +1,52 @@
 import "./style.css";
 
-import * as Controller from "../../Controller";
-import * as Page from "../../Page";
+import * as Controller from "../Controller";
 
 import React, { useContext } from "react";
 
-import Button from "../../Button";
-
 type Props = {};
 
-export const TopNavBar: React.FC<Props> = (props) => {
-  let { controllerState, setControllerState } = useContext(
+const TopNavBar: React.FC<Props> = (props) => {
+  const { controllerState, setControllerState } = useContext(
     Controller.GlobalContext
   );
 
   return (
-    <Page.Page name="menu">
-      <div className="menu-page-inner">
-        <div className="menu-items">
-          <div className="menu-item">
-            <Button
-              onClick={(event) => {
-                console.log("go to page: create");
-                setControllerState(
-                  Controller.setPage("create")(controllerState)
-                );
-              }}
-            >
-              Create
-            </Button>
-          </div>
-          <div className="menu-item">
-            <Button
-              onClick={(event) => {
-                console.log("go to page: play");
-                setControllerState(Controller.setPage("play")(controllerState));
-              }}
-            >
-              Play
-            </Button>
-          </div>
-        </div>
+    <nav className="navbar">
+      <img src="./src/public/favicon.svg" />
+
+      <div className="navbar-buttons">
+        <button
+          className="navbar-button"
+          onClick={(event) => {
+            console.log("go to page: home");
+            setControllerState(Controller.setPage("menu")(controllerState));
+          }}
+        >
+          Home
+        </button>
+        <button
+          className="navbar-button"
+          onClick={(event) => {
+            console.log("go to page: create");
+            setControllerState(Controller.setPage("create")(controllerState));
+          }}
+        >
+          Create
+        </button>
+        <button
+          className="navbar-button"
+          onClick={(event) => {
+            console.log("go to page: play");
+            setControllerState(Controller.setPage("play")(controllerState));
+          }}
+        >
+          Play
+        </button>
       </div>
-    </Page.Page>
+      <div className="navbar-filler"></div>
+    </nav>
   );
 };
+
+export default TopNavBar;

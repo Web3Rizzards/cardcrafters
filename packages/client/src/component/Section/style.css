@@ -1,0 +1,14 @@
+.section-container {
+  height: 400px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 2em;
+  text-align: center;
+  padding: 2em;
+  gap: 2em;
+}
+

@@ -1,6 +1,47 @@
+.menu {
+  font-family: 'Poppins', sans-serif;
+
+}
+
+.title {
+  font-size: 2em;
+
+}
+
+.description {
+  font-size: 1rem;
+}
+
+.black {
+  color: black;
+}
+
+.links-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 10px;
+}
+
+
 .menu-page-inner {
   display: flex;
   width: 40em;
   margin: auto;
   align-items: center;
+}
+
+.links-container-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  background-color: #F8F8F8;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #333;
+  transition: background-color 0.3s;
+}
+
+.links-container-item:hover {
+  background-color: #EAEAEA;
 }

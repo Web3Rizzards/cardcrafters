@@ -5,10 +5,12 @@
   justify-content: center;
   padding: 10px 24px;
   gap: 10px;
-  background: #F8F8F8;
+  background: #FCFCFC;
+  border: none;
   border-bottom: 4px solid #616161;
   border-radius: 8px;
   cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s, border-bottom-width 0.3s;
 }
 
 .button:hover {
