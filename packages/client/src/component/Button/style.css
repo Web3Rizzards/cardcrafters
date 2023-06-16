@@ -13,6 +13,7 @@
   /* border-bottom: 4px solid #616161; */
   border-radius: 8px;
   cursor: pointer;
+  user-select: none;
   transition: background-color 0.3s, transform 0.3s, border-bottom-width 0.3s;
 }
 
