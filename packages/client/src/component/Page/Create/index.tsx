@@ -49,7 +49,7 @@ export const Create: React.FC<Props> = (props) => {
   }
 
   function resetCards() {
-    while (cardsRef.pop()) {}
+    while (cardsRef.pop()) { }
     _setCards([]);
     forceUpdate();
   }
@@ -75,19 +75,25 @@ export const Create: React.FC<Props> = (props) => {
         <img src="./src/public/craftooors.svg"></img>
 
         <div className="create-form">
-          <div></div>
-          <input
-            className="create-prompt"
-            id="create-promptInput"
-            placeholder="Describe a theme, and the AI will generate a deck of cards that are inspired by it..."
-            onChange={(event) => {
-              let prompt = event.target.value;
-              if (prompt.length > max_prompt_length)
-                prompt = prompt.slice(0, max_prompt_length);
-              setPrompt(prompt);
-              event.target.value = prompt;
-            }}
-          />
+          <div className="create-prompt">
+            {/* <span className="create-prompt-prefix">🀛</span> */}
+            <span className="create-prompt-prefix">
+              <div style={{display: "inline-block"}}>🃏</div>
+            </span>
+            <input
+              id="create-promptInput"
+              // placeholder="Describe a theme, and the AI will generate a deck of cards that are inspired by it..."
+              placeholder="Your deck theme"
+              autoFocus={true}
+              onChange={(event) => {
+                let prompt = event.target.value;
+                if (prompt.length > max_prompt_length)
+                  prompt = prompt.slice(0, max_prompt_length);
+                setPrompt(prompt);
+                event.target.value = prompt;
+              }}
+            />
+          </div>
           {/* <div className="create-prompt-length-limit">
                     {prompt.length}/{max_prompt_length}
                   </div> */}
@@ -138,8 +144,6 @@ export const Create: React.FC<Props> = (props) => {
             case "generating":
               return (
                 <div className="create-generating">
-                  {/* <p>Generating a deck with the theme:</p> */}
-                  {/* <p className="create-generating-theme">{prompt}</p> */}
                   <div className="create-cards">
                     {[
                       ...cards.map((card, i) => (

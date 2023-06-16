@@ -32,7 +32,8 @@ const TopNavBar: React.FC<Props> = (props) => {
             setControllerState(Controller.setPage("create")(controllerState));
           }}
         >
-          Create
+          {/* Create */}
+          Craft
         </button>
         <button
           className="navbar-button"

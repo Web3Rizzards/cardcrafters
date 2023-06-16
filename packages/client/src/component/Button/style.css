@@ -8,16 +8,16 @@
   justify-content: center;
   padding: 10px 24px;
   gap: 10px;
-  background: #FCFCFC;
+  background: #e2e2e2;
   border: none;
-  border-bottom: 4px solid #616161;
+  /* border-bottom: 4px solid #616161; */
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s, border-bottom-width 0.3s;
 }
 
 .button:hover {
-  background: #EAEAEA;
+  background: #ededed;
 }
 
 .button:active {
