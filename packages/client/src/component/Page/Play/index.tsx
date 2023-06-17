@@ -5,7 +5,7 @@ import * as Page from "../../Page";
 import * as game from "../../../data/game";
 
 import { Has, HasValue, getComponentValueStrict } from "@latticexyz/recs";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import Button from "../../Button";
 import Card from "../../Card";
@@ -27,6 +27,14 @@ type TranscriptItem = {
   body: string;
 };
 
+//create your forceUpdate hook
+function useForceUpdate() {
+  const [value, setValue] = useState(0); // integer state
+  return () => setValue((value) => value + 1); // update state to force render
+  // A function that increment 👆🏻 the previous state like here
+  // is better than directly setting `setValue(value + 1)`
+}
+
 export const Play: React.FC<Props> = (props) => {
   const { controllerState, setControllerState } = useContext(
     Controller.GlobalContext
@@ -37,6 +45,7 @@ export const Play: React.FC<Props> = (props) => {
     systemCalls: {
       increment,
       createCard,
+      attack,
       summonCard,
       joinPlayer1,
       joinPlayer2,
@@ -44,6 +53,8 @@ export const Play: React.FC<Props> = (props) => {
     },
     network: { singletonEntity, playerEntity },
   } = useMUD();
+
+  const forceUpdate = useForceUpdate();
 
   // const { world } = useMUD;
   // console.log("🚀 | world:", world);
@@ -56,6 +67,9 @@ export const Play: React.FC<Props> = (props) => {
   Board.update$.subscribe((update) => {
     const [nextValue, prevValue] = update.value;
     console.log("Board updated", update, { nextValue, prevValue });
+    setBoard(getBoard(boardEntities));
+    forceUpdate();
+    console.log(board);
   });
 
   CardComponent.update$.subscribe((update) => {
@@ -132,6 +146,26 @@ export const Play: React.FC<Props> = (props) => {
     }
   };
 
+  const getAttackingCard = () => {
+    if (currentPlayer() === "player1") {
+      return board.player1[Number(player1FieldIndex)];
+    } else if (currentPlayer() === "player2") {
+      return board.player2[Number(player2FieldIndex)];
+    } else {
+      return { name: "" };
+    }
+  };
+
+  const getTargetCard = () => {
+    if (currentPlayer() === "player1") {
+      return board.player2[Number(player2FieldIndex)];
+    } else if (currentPlayer() === "player2") {
+      return board.player1[Number(player1FieldIndex)];
+    } else {
+      return { name: "" };
+    }
+  };
+
   function getPlayerCards(playerCardEntities: string[]): game.Card[] {
     const results = playerCardEntities.map((entity) => {
       const out = getComponentValueStrict(CardComponent, entity);
@@ -139,7 +173,6 @@ export const Play: React.FC<Props> = (props) => {
       return { ...out, ...out2 };
     });
     console.log("🚀 | getPlayerCards | results:", results);
-
     return results;
   }
 
@@ -154,13 +187,10 @@ export const Play: React.FC<Props> = (props) => {
   }
 
   // Get the Board
-  const boardEntities: string[] = useEntityQuery([
-    Has(Board),
-    // HasValue(Owner, { creator: meta?.player1 }),
-  ]);
-  console.log("🚀 | boardEntities:", boardEntities);
+  const boardEntities: string[] = useEntityQuery([Has(Board)]);
 
-  function getBoard(boardEntities: string[]): game.Card[] {
+  function getBoard(boardEntities: string[]): game.Board {
+    let newBoard = game.empty_board;
     const results = boardEntities.map((entity) => {
       const out = getComponentValueStrict(Board, entity);
       console.log("🚀 | results | out:", out);
@@ -171,16 +201,30 @@ export const Play: React.FC<Props> = (props) => {
       return { ...out, ...out2 };
     });
 
-    const player1Cards = results.filter((card) => card.owner === meta?.player1);
-    console.log("🚀 | results | player1Cards:", player1Cards);
-    console.log("🚀 | getPlayerCards | results:", results);
+    let player1 = newBoard.player1;
+    let player2 = newBoard.player1;
+    for (let i = 0; i < results.length; i++) {
+      const slot = results[i].slot;
+      console.log("🚀 | getBoard | slot:", slot);
 
-    return results;
+      const card = results[i];
+      console.log("🚀 | getBoard | card:", card);
+
+      if (results[i].player === meta?.player1) {
+        player1 = { ...player1, [slot]: results[i] };
+        console.log("🚀 | getBoard | player1:", player1);
+      } else if (results[i].player === meta?.player2) {
+        player2 = { ...player2, [slot]: results[i] };
+      }
+      newBoard = { ...newBoard, player1, player2 };
+    }
+    console.log("🚀 | getBoard | newBoard:", newBoard);
+
+    return newBoard;
   }
 
-  getBoard(boardEntities);
+  useEffect(() => setBoard(getBoard(boardEntities)), []);
 
-  // getPlayerCards(playerCardEntities);
   return (
     <Page.Page name="play">
       <div className="game">
@@ -279,19 +323,33 @@ export const Play: React.FC<Props> = (props) => {
           {/* Player 1 Field */}
           <div className="game-field game-opponentField">
             <CardSlot
-              id="P1-0"
               onClick={() => {
                 setPlayer1FieldIndex(0);
               }}
+              card={board.player1[0]}
+              active={player1FieldIndex === 0}
             ></CardSlot>
 
             <CardSlot
-              id="P1-1"
               onClick={() => setPlayer1FieldIndex(1)}
+              card={board.player1[1]}
+              active={player1FieldIndex === 1}
             ></CardSlot>
-            <CardSlot onClick={() => setPlayer1FieldIndex(2)}> </CardSlot>
-            <CardSlot onClick={() => setPlayer1FieldIndex(3)}></CardSlot>
-            <CardSlot onClick={() => setPlayer1FieldIndex(4)}></CardSlot>
+            <CardSlot
+              onClick={() => setPlayer1FieldIndex(2)}
+              card={board.player1[2]}
+              active={player1FieldIndex === 2}
+            ></CardSlot>
+            <CardSlot
+              onClick={() => setPlayer1FieldIndex(3)}
+              card={board.player1[3]}
+              active={player1FieldIndex === 3}
+            ></CardSlot>
+            <CardSlot
+              onClick={() => setPlayer1FieldIndex(4)}
+              card={board.player1[4]}
+              active={player1FieldIndex === 4}
+            ></CardSlot>
           </div>
 
           {/* Divider */}
@@ -301,17 +359,29 @@ export const Play: React.FC<Props> = (props) => {
           <div className="game-field game-playerField">
             <CardSlot
               onClick={() => setPlayer2FieldIndex(0)}
-              card={game.exampleCard1}
+              card={board.player2[0]}
               active={player2FieldIndex === 0}
             ></CardSlot>
             <CardSlot
               onClick={() => setPlayer2FieldIndex(1)}
-              card={game.exampleCard1}
+              card={board.player2[1]}
               active={player2FieldIndex === 1}
             ></CardSlot>
-            <CardSlot onClick={() => setPlayer2FieldIndex(2)}></CardSlot>
-            <CardSlot onClick={() => setPlayer2FieldIndex(3)}></CardSlot>
-            <CardSlot onClick={() => setPlayer2FieldIndex(4)}></CardSlot>
+            <CardSlot
+              onClick={() => setPlayer2FieldIndex(2)}
+              card={board.player2[2]}
+              active={player2FieldIndex === 2}
+            ></CardSlot>
+            <CardSlot
+              onClick={() => setPlayer2FieldIndex(3)}
+              card={board.player2[3]}
+              active={player2FieldIndex === 3}
+            ></CardSlot>
+            <CardSlot
+              onClick={() => setPlayer2FieldIndex(4)}
+              card={board.player2[4]}
+              active={player2FieldIndex === 4}
+            ></CardSlot>
           </div>
 
           {/* Player 2 Stats */}
@@ -397,6 +467,14 @@ export const Play: React.FC<Props> = (props) => {
               }}
             >
               Summon Card
+            </Button>
+
+            <Button
+              onClick={() =>
+                attack(getAttackingCard().name, getTargetCard().name)
+              }
+            >
+              Attack
             </Button>
 
             <Button onClick={() => startGame()}>Start Game</Button>
