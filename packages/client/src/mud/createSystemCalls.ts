@@ -34,7 +34,8 @@ export function createSystemCalls(
     const tx = await worldSend("createCard", [
       cardName,
       "description", // TODO
-      "image", //TODO
+      // "image", //TODO
+      image,
       attack,
       health,
       cost,

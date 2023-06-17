@@ -55,7 +55,7 @@ export const Create: React.FC<Props> = (props) => {
   }
 
   function resetCards() {
-    while (cardsRef.pop()) {}
+    while (cardsRef.pop()) { }
     _setCards([]);
     forceUpdate();
   }
@@ -63,6 +63,29 @@ export const Create: React.FC<Props> = (props) => {
   const ability2Enum = (ability: string) => {
     return { Inspire: 2, Damage: 1, Heal: 0, Weaken: 3 }[ability];
   };
+
+  async function submitThemePrompt() {
+    resetCards();
+    setStage({ case: "generating" });
+
+    await generateDeck({ theme: prompt }, (card) => {
+      console.log("🚀 | onClick={ | card:", card);
+      createCard(
+        card.name,
+        card.attack,
+        card.health,
+        card.cost,
+        ability2Enum(card.ability.case) as number,
+        card.ability.amount,
+        card.abilityDescription,
+        card.image
+      );
+      console.log(`Generated card: ${card.name}`);
+      addCard(card);
+    });
+
+    setStage({ case: "generated" });
+  }
 
   return (
     <Page.Page name="create">
@@ -98,6 +121,12 @@ export const Create: React.FC<Props> = (props) => {
                 setPrompt(prompt);
                 event.target.value = prompt;
               }}
+              onKeyDown={event => {
+                if (event.key === 'Enter') {
+                  event.preventDefault()
+                  submitThemePrompt()
+                }
+              }}
             />
           </div>
           {/* <div className="create-prompt-length-limit">
@@ -105,26 +134,7 @@ export const Create: React.FC<Props> = (props) => {
                   </div> */}
           <div className="create-button-container">
             <Button
-              onClick={async (event) => {
-                resetCards();
-                setStage({ case: "generating" });
-
-                await generateDeck({ theme: prompt }, (card) => {
-                  console.log("🚀 | onClick={ | card:", card);
-                  createCard(
-                    card.name,
-                    card.attack,
-                    card.health,
-                    card.cost,
-                    ability2Enum(card.ability.case) as number,
-                    card.ability.amount
-                  );
-                  console.log(`Generated card: ${card.name}`);
-                  addCard(card);
-                });
-
-                setStage({ case: "generated" });
-              }}
+              onClick={event => submitThemePrompt()}
             >
               Submit
             </Button>
