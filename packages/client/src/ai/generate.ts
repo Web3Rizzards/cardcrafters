@@ -10,21 +10,6 @@ export type DeckPrompt = {
   theme: string;
 };
 
-async function generateDeckCardNames(prompt: DeckPrompt): Promise<string[]> {
-  return [
-    "Crypto Bro",
-    "Avatar",
-    "NFT",
-    "DAO",
-    "DeFi",
-    "Yield Farming",
-    "Liquidity Pool",
-    "Staking",
-    "Governance",
-    "Smart Contract",
-  ];
-}
-
 export async function generateDeck(
   prompt: DeckPrompt,
   onGenerateCard?: (card: game.Card) => void
