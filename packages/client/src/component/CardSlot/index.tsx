@@ -5,13 +5,37 @@ import * as game from "../../data/game";
 import Card from "../Card";
 import React from "react";
 
-type Props = { onClick: () => void; card?: game.Card };
+type Props = {
+  id: string;
+  onClick: () => void;
+  card?: game.Card;
+  active: boolean;
+};
 
-const CardSlot: React.FC<Props> = ({ onClick, card }) => {
+const CardSlot: React.FC<Props> = ({ id, onClick, card, active }) => {
   if (!card) {
-    return <div onClick={onClick} className="card-slot"></div>;
+    return (
+      <div
+        onClick={() => {
+          onClick();
+          console.log("ASD");
+        }}
+        className="card-slot"
+      ></div>
+    );
   } else {
-    return <Card card={card}> </Card>;
+    return (
+      <Card
+        onSelectCard={() => {
+          onClick();
+          console.log("ASD");
+        }}
+        card={card}
+        active={active}
+      >
+        {" "}
+      </Card>
+    );
   }
 };
 

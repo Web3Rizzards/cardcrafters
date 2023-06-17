@@ -48,6 +48,13 @@ export default mudConfig({
         creator: "address",
       },
     },
+    Metadata: {
+      schema: {
+        name: "string",
+        description: "string",
+        image: "string",
+      },
+    },
     Player: {
       keySchema: { player: "address" },
       schema: {

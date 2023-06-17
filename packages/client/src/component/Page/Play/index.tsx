@@ -27,7 +27,7 @@ export const Play: React.FC<Props> = (props) => {
   );
 
   const {
-    components: { Counter, Game, Card: CardComponent, Owner, Board },
+    components: { Counter, Game, Card: CardComponent, Owner, Board, Metadata },
     systemCalls: {
       increment,
       createCard,
@@ -63,8 +63,8 @@ export const Play: React.FC<Props> = (props) => {
   const [player1FieldIndex, setPlayer1FieldIndex] = useState(0);
   const [player2FieldIndex, setPlayer2FieldIndex] = useState(0);
 
-  const [player1Card, setPlayer1Card] = useState(0);
-  const [player2Card, setPlayer2Card] = useState(0);
+  const [player1Card, setPlayer1Card] = useState(""); // To set with the name of the card
+  const [player2Card, setPlayer2Card] = useState(""); // To set with the name of the card
 
   // Get user addr
 
@@ -74,6 +74,7 @@ export const Play: React.FC<Props> = (props) => {
   // Given the entity ids get player card details
   const player1CardEntities: string[] = useEntityQuery([
     Has(Owner),
+    Has(Metadata),
     HasValue(Owner, { creator: players?.player1 }),
   ]);
 
@@ -88,12 +89,24 @@ export const Play: React.FC<Props> = (props) => {
   console.log("🚀 | playerCardEntities:", player2CardEntities);
 
   function getPlayerCards(playerCardEntities: string[]): game.Card[] {
-    const results = playerCardEntities.map((entity) =>
-      getComponentValueStrict(CardComponent, entity)
-    );
+    const results = playerCardEntities.map((entity) => {
+      const out = getComponentValueStrict(CardComponent, entity);
+      const out2 = getComponentValueStrict(Metadata, entity);
+      return { ...out, ...out2 };
+    });
     console.log("🚀 | getPlayerCards | results:", results);
 
     return results;
+  }
+
+  function onSelectCardP1(cardName: string) {
+    console.log("🚀 | onSelectCard | cardName:", cardName);
+    setPlayer1Card(cardName);
+  }
+
+  function onSelectCardP2(cardName: string) {
+    console.log("🚀 | onSelectCard | cardName:", cardName);
+    setPlayer2Card(cardName);
   }
 
   // getPlayerCards(playerCardEntities);
@@ -108,7 +121,12 @@ export const Play: React.FC<Props> = (props) => {
             {players?.player1 ? (
               // <div className="game-hand-cards">
               getPlayerCards(player1CardEntities).map((card, index) => (
-                <Card key={index} card={card}></Card>
+                <Card
+                  key={index}
+                  card={card}
+                  onSelectCard={onSelectCardP1}
+                  active={card.name === player1Card}
+                ></Card>
               ))
             ) : (
               // </div>
@@ -142,12 +160,16 @@ export const Play: React.FC<Props> = (props) => {
           {/* Player 1 Field */}
           <div className="game-field game-opponentField">
             <CardSlot
+              id="P1-0"
               onClick={() => {
                 setPlayer1FieldIndex(0);
-                console.log("XXX");
               }}
             ></CardSlot>
-            <CardSlot onClick={() => setPlayer1FieldIndex(1)}></CardSlot>
+
+            <CardSlot
+              id="P1-1"
+              onClick={() => setPlayer1FieldIndex(1)}
+            ></CardSlot>
             <CardSlot onClick={() => setPlayer1FieldIndex(2)}> </CardSlot>
             <CardSlot onClick={() => setPlayer1FieldIndex(3)}></CardSlot>
             <CardSlot onClick={() => setPlayer1FieldIndex(4)}></CardSlot>
@@ -161,8 +183,13 @@ export const Play: React.FC<Props> = (props) => {
             <CardSlot
               onClick={() => setPlayer2FieldIndex(0)}
               card={game.exampleCard1}
+              active={player2FieldIndex === 0}
             ></CardSlot>
-            <CardSlot onClick={() => setPlayer2FieldIndex(1)}></CardSlot>
+            <CardSlot
+              onClick={() => setPlayer2FieldIndex(1)}
+              card={game.exampleCard1}
+              active={player2FieldIndex === 1}
+            ></CardSlot>
             <CardSlot onClick={() => setPlayer2FieldIndex(2)}></CardSlot>
             <CardSlot onClick={() => setPlayer2FieldIndex(3)}></CardSlot>
             <CardSlot onClick={() => setPlayer2FieldIndex(4)}></CardSlot>
@@ -196,7 +223,12 @@ export const Play: React.FC<Props> = (props) => {
             {players?.player2 && players?.player2 !== zeroAddress ? (
               // <div className="game-hand-cards">
               getPlayerCards(player2CardEntities).map((card, index) => (
-                <Card key={index} card={card}></Card>
+                <Card
+                  key={index}
+                  card={card}
+                  onSelectCard={onSelectCardP2}
+                  active={card.name === player2Card}
+                ></Card>
               ))
             ) : (
               // </div>

@@ -2,7 +2,7 @@
 pragma solidity >=0.8.0;
 
 import { System } from "@latticexyz/world/src/System.sol";
-import { Card, CardData, Owner } from "../codegen/Tables.sol";
+import { Card, CardData, Owner, MetadataData, Metadata } from "../codegen/Tables.sol";
 import { AbilityType } from "../codegen/Types.sol";
 
 // import erc721
@@ -14,6 +14,8 @@ contract CardCreationSystem is System {
    */
   function createCard(
     string memory cardName,
+    string memory description,
+    string memory image,
     uint32 attack,
     uint32 health,
     uint32 cost,
@@ -59,8 +61,11 @@ contract CardCreationSystem is System {
       creator: _msgSender(),
       exists: true
     });
+
+    MetadataData memory metadata = MetadataData({ name: cardName, description: description, image: image });
     // Cardname is hashed to form the key
     Card.set(keccak256(bytes(cardName)), card);
     Owner.set(keccak256(bytes(cardName)), _msgSender());
+    Metadata.set(keccak256(bytes(cardName)), metadata);
   }
 }

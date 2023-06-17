@@ -8,6 +8,8 @@ import { AbilityType } from "./../Types.sol";
 interface ICardCreationSystem {
   function createCard(
     string memory cardName,
+    string memory description,
+    string memory image,
     uint32 attack,
     uint32 health,
     uint32 cost,

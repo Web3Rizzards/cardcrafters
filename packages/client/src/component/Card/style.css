@@ -19,6 +19,13 @@
   overflow: hidden;
 
   font-family: 'Poppins', sans-serif;
+
+  cursor: pointer;
+}
+
+.active {
+  opacity: 0px;
+  border: 4px solid #E9BA48;
 }
 
 .card-inner {

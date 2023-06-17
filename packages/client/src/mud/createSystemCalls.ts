@@ -21,7 +21,9 @@ export function createSystemCalls(
     health: number,
     cost: number,
     ability: number,
-    abilityValue: number
+    abilityValue: number,
+    description: string,
+    image: string // BASE 64
   ) => {
     // string memory cardName,
     // uint32 attack,
@@ -31,6 +33,8 @@ export function createSystemCalls(
     // uint32 abilityValue
     const tx = await worldSend("createCard", [
       cardName,
+      "description", // TODO
+      "image", //TODO
       attack,
       health,
       cost,
