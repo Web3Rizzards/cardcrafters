@@ -30,18 +30,18 @@ export type Ability =
 
 export type Board = {
   player1: {
-    0: Card | null;
-    1: Card | null;
-    2: Card | null;
-    3: Card | null;
-    4: Card | null;
+    0: Card | undefined | null;
+    1: Card | undefined | null;
+    2: Card | undefined | null;
+    3: Card | undefined | null;
+    4: Card | undefined | null;
   };
   player2: {
-    0: Card | null;
-    1: Card | null;
-    2: Card | null;
-    3: Card | null;
-    4: Card | null;
+    0: Card | undefined | null;
+    1: Card | undefined | null;
+    2: Card | undefined | null;
+    3: Card | undefined | null;
+    4: Card | undefined | null;
   };
 };
 

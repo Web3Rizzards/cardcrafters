@@ -34,7 +34,6 @@ export const Create: React.FC<Props> = (props) => {
 
   CardComponent.update$.subscribe((update) => {
     const [nextValue, prevValue] = update.value;
-    console.log("1. CardComponent updated", update, { nextValue, prevValue });
   });
 
   const { controllerState, setControllerState } = useContext(

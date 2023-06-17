@@ -79,12 +79,8 @@ export function createSystemCalls(
   };
 
   // attack
-  const attack = async (
-    boardId: number,
-    opponent: `0x${string}`,
-    targetId: number
-  ) => {
-    const tx = await worldSend("attackCard", [boardId, opponent, targetId]);
+  const attack = async (attackingCard: string, targetCard: string) => {
+    const tx = await worldSend("attackCard", [attackingCard, targetCard]);
     await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
     return getComponentValue(Counter, singletonEntity);
   };

@@ -36,6 +36,7 @@ contract GameSystem is System {
     require(!Game.getStarted(), "Game has already started");
 
     Game.setStarted(true);
+    Game.setTurn(1);
     Game.setStart_time(block.timestamp);
     Game.setLast_move_time(block.timestamp);
   }
