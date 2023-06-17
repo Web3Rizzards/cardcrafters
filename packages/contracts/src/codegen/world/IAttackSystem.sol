@@ -6,7 +6,7 @@ pragma solidity >=0.8.0;
 interface IAttackSystem {
   function summonCard(string memory cardName, uint8 boardId) external;
 
-  function attackCard(uint8 boardId, address targetPlayer, uint8 targetBoardId) external;
+  function attackCard(string memory _attackingCard, string memory _targetCard) external;
 
-  function attackPlayer(uint8 boardId, address targetPlayer) external;
+  function attackPlayer(string memory _attackingCard, address targetPlayer) external;
 }

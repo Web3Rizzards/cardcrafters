@@ -21,6 +21,8 @@ bytes32 constant _tableId = bytes32(abi.encodePacked(bytes16(""), bytes16("Board
 bytes32 constant BoardTableId = _tableId;
 
 struct BoardData {
+  address player;
+  uint8 slot;
   bytes32 card;
   uint32 attack;
   uint32 health;
@@ -30,30 +32,33 @@ struct BoardData {
 library Board {
   /** Get the table's schema */
   function getSchema() internal pure returns (Schema) {
-    SchemaType[] memory _schema = new SchemaType[](4);
-    _schema[0] = SchemaType.BYTES32;
-    _schema[1] = SchemaType.UINT32;
-    _schema[2] = SchemaType.UINT32;
-    _schema[3] = SchemaType.UINT8;
+    SchemaType[] memory _schema = new SchemaType[](6);
+    _schema[0] = SchemaType.ADDRESS;
+    _schema[1] = SchemaType.UINT8;
+    _schema[2] = SchemaType.BYTES32;
+    _schema[3] = SchemaType.UINT32;
+    _schema[4] = SchemaType.UINT32;
+    _schema[5] = SchemaType.UINT8;
 
     return SchemaLib.encode(_schema);
   }
 
   function getKeySchema() internal pure returns (Schema) {
-    SchemaType[] memory _schema = new SchemaType[](2);
-    _schema[0] = SchemaType.ADDRESS;
-    _schema[1] = SchemaType.UINT8;
+    SchemaType[] memory _schema = new SchemaType[](1);
+    _schema[0] = SchemaType.BYTES32;
 
     return SchemaLib.encode(_schema);
   }
 
   /** Get the table's metadata */
   function getMetadata() internal pure returns (string memory, string[] memory) {
-    string[] memory _fieldNames = new string[](4);
-    _fieldNames[0] = "card";
-    _fieldNames[1] = "attack";
-    _fieldNames[2] = "health";
-    _fieldNames[3] = "lastAttacked";
+    string[] memory _fieldNames = new string[](6);
+    _fieldNames[0] = "player";
+    _fieldNames[1] = "slot";
+    _fieldNames[2] = "card";
+    _fieldNames[3] = "attack";
+    _fieldNames[4] = "health";
+    _fieldNames[5] = "lastAttacked";
     return ("Board", _fieldNames);
   }
 
@@ -79,192 +84,231 @@ library Board {
     _store.setMetadata(_tableId, _tableName, _fieldNames);
   }
 
-  /** Get card */
-  function getCard(address player, uint8 slot) internal view returns (bytes32 card) {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256(uint160(player)));
-    _keyTuple[1] = bytes32(uint256(slot));
+  /** Get player */
+  function getPlayer(bytes32 key) internal view returns (address player) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
     bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 0);
+    return (address(Bytes.slice20(_blob, 0)));
+  }
+
+  /** Get player (using the specified store) */
+  function getPlayer(IStore _store, bytes32 key) internal view returns (address player) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 0);
+    return (address(Bytes.slice20(_blob, 0)));
+  }
+
+  /** Set player */
+  function setPlayer(bytes32 key, address player) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setField(_tableId, _keyTuple, 0, abi.encodePacked((player)));
+  }
+
+  /** Set player (using the specified store) */
+  function setPlayer(IStore _store, bytes32 key, address player) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    _store.setField(_tableId, _keyTuple, 0, abi.encodePacked((player)));
+  }
+
+  /** Get slot */
+  function getSlot(bytes32 key) internal view returns (uint8 slot) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 1);
+    return (uint8(Bytes.slice1(_blob, 0)));
+  }
+
+  /** Get slot (using the specified store) */
+  function getSlot(IStore _store, bytes32 key) internal view returns (uint8 slot) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 1);
+    return (uint8(Bytes.slice1(_blob, 0)));
+  }
+
+  /** Set slot */
+  function setSlot(bytes32 key, uint8 slot) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setField(_tableId, _keyTuple, 1, abi.encodePacked((slot)));
+  }
+
+  /** Set slot (using the specified store) */
+  function setSlot(IStore _store, bytes32 key, uint8 slot) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    _store.setField(_tableId, _keyTuple, 1, abi.encodePacked((slot)));
+  }
+
+  /** Get card */
+  function getCard(bytes32 key) internal view returns (bytes32 card) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 2);
     return (Bytes.slice32(_blob, 0));
   }
 
   /** Get card (using the specified store) */
-  function getCard(IStore _store, address player, uint8 slot) internal view returns (bytes32 card) {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256(uint160(player)));
-    _keyTuple[1] = bytes32(uint256(slot));
+  function getCard(IStore _store, bytes32 key) internal view returns (bytes32 card) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 0);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 2);
     return (Bytes.slice32(_blob, 0));
   }
 
   /** Set card */
-  function setCard(address player, uint8 slot, bytes32 card) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256(uint160(player)));
-    _keyTuple[1] = bytes32(uint256(slot));
+  function setCard(bytes32 key, bytes32 card) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
-    StoreSwitch.setField(_tableId, _keyTuple, 0, abi.encodePacked((card)));
+    StoreSwitch.setField(_tableId, _keyTuple, 2, abi.encodePacked((card)));
   }
 
   /** Set card (using the specified store) */
-  function setCard(IStore _store, address player, uint8 slot, bytes32 card) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256(uint160(player)));
-    _keyTuple[1] = bytes32(uint256(slot));
+  function setCard(IStore _store, bytes32 key, bytes32 card) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
-    _store.setField(_tableId, _keyTuple, 0, abi.encodePacked((card)));
+    _store.setField(_tableId, _keyTuple, 2, abi.encodePacked((card)));
   }
 
   /** Get attack */
-  function getAttack(address player, uint8 slot) internal view returns (uint32 attack) {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256(uint160(player)));
-    _keyTuple[1] = bytes32(uint256(slot));
+  function getAttack(bytes32 key) internal view returns (uint32 attack) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 1);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 3);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
   /** Get attack (using the specified store) */
-  function getAttack(IStore _store, address player, uint8 slot) internal view returns (uint32 attack) {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256(uint160(player)));
-    _keyTuple[1] = bytes32(uint256(slot));
+  function getAttack(IStore _store, bytes32 key) internal view returns (uint32 attack) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 1);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 3);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
   /** Set attack */
-  function setAttack(address player, uint8 slot, uint32 attack) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256(uint160(player)));
-    _keyTuple[1] = bytes32(uint256(slot));
+  function setAttack(bytes32 key, uint32 attack) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
-    StoreSwitch.setField(_tableId, _keyTuple, 1, abi.encodePacked((attack)));
+    StoreSwitch.setField(_tableId, _keyTuple, 3, abi.encodePacked((attack)));
   }
 
   /** Set attack (using the specified store) */
-  function setAttack(IStore _store, address player, uint8 slot, uint32 attack) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256(uint160(player)));
-    _keyTuple[1] = bytes32(uint256(slot));
+  function setAttack(IStore _store, bytes32 key, uint32 attack) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
-    _store.setField(_tableId, _keyTuple, 1, abi.encodePacked((attack)));
+    _store.setField(_tableId, _keyTuple, 3, abi.encodePacked((attack)));
   }
 
   /** Get health */
-  function getHealth(address player, uint8 slot) internal view returns (uint32 health) {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256(uint160(player)));
-    _keyTuple[1] = bytes32(uint256(slot));
+  function getHealth(bytes32 key) internal view returns (uint32 health) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 2);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 4);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
   /** Get health (using the specified store) */
-  function getHealth(IStore _store, address player, uint8 slot) internal view returns (uint32 health) {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256(uint160(player)));
-    _keyTuple[1] = bytes32(uint256(slot));
+  function getHealth(IStore _store, bytes32 key) internal view returns (uint32 health) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 2);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 4);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
   /** Set health */
-  function setHealth(address player, uint8 slot, uint32 health) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256(uint160(player)));
-    _keyTuple[1] = bytes32(uint256(slot));
+  function setHealth(bytes32 key, uint32 health) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
-    StoreSwitch.setField(_tableId, _keyTuple, 2, abi.encodePacked((health)));
+    StoreSwitch.setField(_tableId, _keyTuple, 4, abi.encodePacked((health)));
   }
 
   /** Set health (using the specified store) */
-  function setHealth(IStore _store, address player, uint8 slot, uint32 health) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256(uint160(player)));
-    _keyTuple[1] = bytes32(uint256(slot));
+  function setHealth(IStore _store, bytes32 key, uint32 health) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
-    _store.setField(_tableId, _keyTuple, 2, abi.encodePacked((health)));
+    _store.setField(_tableId, _keyTuple, 4, abi.encodePacked((health)));
   }
 
   /** Get lastAttacked */
-  function getLastAttacked(address player, uint8 slot) internal view returns (uint8 lastAttacked) {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256(uint160(player)));
-    _keyTuple[1] = bytes32(uint256(slot));
+  function getLastAttacked(bytes32 key) internal view returns (uint8 lastAttacked) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 3);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 5);
     return (uint8(Bytes.slice1(_blob, 0)));
   }
 
   /** Get lastAttacked (using the specified store) */
-  function getLastAttacked(IStore _store, address player, uint8 slot) internal view returns (uint8 lastAttacked) {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256(uint160(player)));
-    _keyTuple[1] = bytes32(uint256(slot));
+  function getLastAttacked(IStore _store, bytes32 key) internal view returns (uint8 lastAttacked) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 3);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 5);
     return (uint8(Bytes.slice1(_blob, 0)));
   }
 
   /** Set lastAttacked */
-  function setLastAttacked(address player, uint8 slot, uint8 lastAttacked) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256(uint160(player)));
-    _keyTuple[1] = bytes32(uint256(slot));
+  function setLastAttacked(bytes32 key, uint8 lastAttacked) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
-    StoreSwitch.setField(_tableId, _keyTuple, 3, abi.encodePacked((lastAttacked)));
+    StoreSwitch.setField(_tableId, _keyTuple, 5, abi.encodePacked((lastAttacked)));
   }
 
   /** Set lastAttacked (using the specified store) */
-  function setLastAttacked(IStore _store, address player, uint8 slot, uint8 lastAttacked) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256(uint160(player)));
-    _keyTuple[1] = bytes32(uint256(slot));
+  function setLastAttacked(IStore _store, bytes32 key, uint8 lastAttacked) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
-    _store.setField(_tableId, _keyTuple, 3, abi.encodePacked((lastAttacked)));
+    _store.setField(_tableId, _keyTuple, 5, abi.encodePacked((lastAttacked)));
   }
 
   /** Get the full data */
-  function get(address player, uint8 slot) internal view returns (BoardData memory _table) {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256(uint160(player)));
-    _keyTuple[1] = bytes32(uint256(slot));
+  function get(bytes32 key) internal view returns (BoardData memory _table) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
     bytes memory _blob = StoreSwitch.getRecord(_tableId, _keyTuple, getSchema());
     return decode(_blob);
   }
 
   /** Get the full data (using the specified store) */
-  function get(IStore _store, address player, uint8 slot) internal view returns (BoardData memory _table) {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256(uint160(player)));
-    _keyTuple[1] = bytes32(uint256(slot));
+  function get(IStore _store, bytes32 key) internal view returns (BoardData memory _table) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
     bytes memory _blob = _store.getRecord(_tableId, _keyTuple, getSchema());
     return decode(_blob);
   }
 
   /** Set the full data using individual values */
-  function set(address player, uint8 slot, bytes32 card, uint32 attack, uint32 health, uint8 lastAttacked) internal {
-    bytes memory _data = encode(card, attack, health, lastAttacked);
-
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256(uint160(player)));
-    _keyTuple[1] = bytes32(uint256(slot));
-
-    StoreSwitch.setRecord(_tableId, _keyTuple, _data);
-  }
-
-  /** Set the full data using individual values (using the specified store) */
   function set(
-    IStore _store,
+    bytes32 key,
     address player,
     uint8 slot,
     bytes32 card,
@@ -272,62 +316,88 @@ library Board {
     uint32 health,
     uint8 lastAttacked
   ) internal {
-    bytes memory _data = encode(card, attack, health, lastAttacked);
+    bytes memory _data = encode(player, slot, card, attack, health, lastAttacked);
 
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256(uint160(player)));
-    _keyTuple[1] = bytes32(uint256(slot));
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
+
+    StoreSwitch.setRecord(_tableId, _keyTuple, _data);
+  }
+
+  /** Set the full data using individual values (using the specified store) */
+  function set(
+    IStore _store,
+    bytes32 key,
+    address player,
+    uint8 slot,
+    bytes32 card,
+    uint32 attack,
+    uint32 health,
+    uint8 lastAttacked
+  ) internal {
+    bytes memory _data = encode(player, slot, card, attack, health, lastAttacked);
+
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
     _store.setRecord(_tableId, _keyTuple, _data);
   }
 
   /** Set the full data using the data struct */
-  function set(address player, uint8 slot, BoardData memory _table) internal {
-    set(player, slot, _table.card, _table.attack, _table.health, _table.lastAttacked);
+  function set(bytes32 key, BoardData memory _table) internal {
+    set(key, _table.player, _table.slot, _table.card, _table.attack, _table.health, _table.lastAttacked);
   }
 
   /** Set the full data using the data struct (using the specified store) */
-  function set(IStore _store, address player, uint8 slot, BoardData memory _table) internal {
-    set(_store, player, slot, _table.card, _table.attack, _table.health, _table.lastAttacked);
+  function set(IStore _store, bytes32 key, BoardData memory _table) internal {
+    set(_store, key, _table.player, _table.slot, _table.card, _table.attack, _table.health, _table.lastAttacked);
   }
 
   /** Decode the tightly packed blob using this table's schema */
   function decode(bytes memory _blob) internal pure returns (BoardData memory _table) {
-    _table.card = (Bytes.slice32(_blob, 0));
+    _table.player = (address(Bytes.slice20(_blob, 0)));
 
-    _table.attack = (uint32(Bytes.slice4(_blob, 32)));
+    _table.slot = (uint8(Bytes.slice1(_blob, 20)));
 
-    _table.health = (uint32(Bytes.slice4(_blob, 36)));
+    _table.card = (Bytes.slice32(_blob, 21));
 
-    _table.lastAttacked = (uint8(Bytes.slice1(_blob, 40)));
+    _table.attack = (uint32(Bytes.slice4(_blob, 53)));
+
+    _table.health = (uint32(Bytes.slice4(_blob, 57)));
+
+    _table.lastAttacked = (uint8(Bytes.slice1(_blob, 61)));
   }
 
   /** Tightly pack full data using this table's schema */
-  function encode(bytes32 card, uint32 attack, uint32 health, uint8 lastAttacked) internal view returns (bytes memory) {
-    return abi.encodePacked(card, attack, health, lastAttacked);
+  function encode(
+    address player,
+    uint8 slot,
+    bytes32 card,
+    uint32 attack,
+    uint32 health,
+    uint8 lastAttacked
+  ) internal view returns (bytes memory) {
+    return abi.encodePacked(player, slot, card, attack, health, lastAttacked);
   }
 
   /** Encode keys as a bytes32 array using this table's schema */
-  function encodeKeyTuple(address player, uint8 slot) internal pure returns (bytes32[] memory _keyTuple) {
-    _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256(uint160(player)));
-    _keyTuple[1] = bytes32(uint256(slot));
+  function encodeKeyTuple(bytes32 key) internal pure returns (bytes32[] memory _keyTuple) {
+    _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
   }
 
   /* Delete all data for given keys */
-  function deleteRecord(address player, uint8 slot) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256(uint160(player)));
-    _keyTuple[1] = bytes32(uint256(slot));
+  function deleteRecord(bytes32 key) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
     StoreSwitch.deleteRecord(_tableId, _keyTuple);
   }
 
   /* Delete all data for given keys (using the specified store) */
-  function deleteRecord(IStore _store, address player, uint8 slot) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256(uint160(player)));
-    _keyTuple[1] = bytes32(uint256(slot));
+  function deleteRecord(IStore _store, bytes32 key) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
     _store.deleteRecord(_tableId, _keyTuple);
   }

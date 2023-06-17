@@ -34,6 +34,7 @@ export const Play: React.FC<Props> = (props) => {
       summonCard,
       joinPlayer1,
       joinPlayer2,
+      startGame,
     },
     network: { singletonEntity, playerEntity },
   } = useMUD();
@@ -57,7 +58,17 @@ export const Play: React.FC<Props> = (props) => {
   });
 
   const counter = useComponentValue(Counter, singletonEntity);
-  const players = useComponentValue(Game, singletonEntity);
+  const meta = useComponentValue(Game, singletonEntity);
+
+  const currentPlayer = () => {
+    if (meta?.player1.toLowerCase() === getUserAddress(playerEntity)) {
+      return "player1";
+    } else if (meta?.player2.toLowerCase() === getUserAddress(playerEntity)) {
+      return "player2";
+    } else {
+      return "spectator";
+    }
+  };
 
   const [name, setName] = useState("");
   const [player1FieldIndex, setPlayer1FieldIndex] = useState(0);
@@ -66,27 +77,48 @@ export const Play: React.FC<Props> = (props) => {
   const [player1Card, setPlayer1Card] = useState(""); // To set with the name of the card
   const [player2Card, setPlayer2Card] = useState(""); // To set with the name of the card
 
-  // Get user addr
+  const [board, setBoard] = useState(game.empty_board);
 
+  // Get user addr
   const userAddr = getUserAddress(playerEntity);
   console.log("🚀 | userAddr:", userAddr);
 
   // Given the entity ids get player card details
   const player1CardEntities: string[] = useEntityQuery([
     Has(Owner),
-    Has(Metadata),
-    HasValue(Owner, { creator: players?.player1 }),
+    HasValue(Owner, { creator: meta?.player1 }),
   ]);
 
   const player2CardEntities: string[] = useEntityQuery([
     Has(Owner),
-    HasValue(Owner, { creator: players?.player2 }),
+    HasValue(Owner, { creator: meta?.player2 }),
   ]);
 
-  console.log(players?.player1);
-  console.log(players?.player2);
+  console.log(meta?.player1);
+  console.log(meta?.player2);
   console.log("🚀 | playerCardEntities:", player1CardEntities);
   console.log("🚀 | playerCardEntities:", player2CardEntities);
+
+  // For SummonCard
+  const getCurrentSelectedField = () => {
+    if (currentPlayer() === "player1") {
+      return Number(player1FieldIndex);
+    } else if (currentPlayer() === "player2") {
+      return Number(player2FieldIndex);
+    } else {
+      return "";
+    }
+  };
+
+  const getCurrentSelectedCard = () => {
+    if (currentPlayer() === "player1") {
+      return player1Card;
+    } else if (currentPlayer() === "player2") {
+      return player2Card;
+    } else {
+      return "";
+    }
+  };
 
   function getPlayerCards(playerCardEntities: string[]): game.Card[] {
     const results = playerCardEntities.map((entity) => {
@@ -109,6 +141,33 @@ export const Play: React.FC<Props> = (props) => {
     setPlayer2Card(cardName);
   }
 
+  // Get the Board
+  const boardEntities: string[] = useEntityQuery([
+    Has(Board),
+    // HasValue(Owner, { creator: meta?.player1 }),
+  ]);
+  console.log("🚀 | boardEntities:", boardEntities);
+
+  function getBoard(boardEntities: string[]): game.Card[] {
+    const results = boardEntities.map((entity) => {
+      const out = getComponentValueStrict(Board, entity);
+      console.log("🚀 | results | out:", out);
+
+      // filter player 1 cards
+
+      const out2 = getComponentValueStrict(Metadata, entity);
+      return { ...out, ...out2 };
+    });
+
+    const player1Cards = results.filter((card) => card.owner === meta?.player1);
+    console.log("🚀 | results | player1Cards:", player1Cards);
+    console.log("🚀 | getPlayerCards | results:", results);
+
+    return results;
+  }
+
+  getBoard(boardEntities);
+
   // getPlayerCards(playerCardEntities);
   return (
     <Page.Page name="play">
@@ -118,7 +177,7 @@ export const Play: React.FC<Props> = (props) => {
           <div className="game-hand game-opponentHand">
             {/* Show Join button if player 1, else show the cards */}
 
-            {players?.player1 ? (
+            {meta?.player1 ? (
               // <div className="game-hand-cards">
               getPlayerCards(player1CardEntities).map((card, index) => (
                 <Card
@@ -131,7 +190,7 @@ export const Play: React.FC<Props> = (props) => {
             ) : (
               // </div>
               <Button onClick={() => joinPlayer1()} className="join">
-                {players?.player1 ? players?.player1 : "Join player 1"}
+                {meta?.player1 ? meta?.player1 : "Join player 1"}
               </Button>
             )}
           </div>
@@ -218,9 +277,8 @@ export const Play: React.FC<Props> = (props) => {
 
           {/* Player 2 Hand */}
           <div className="game-hand game-playerHand">
-            {/* Show Join button if player 1, else show the cards */}
-
-            {players?.player2 && players?.player2 !== zeroAddress ? (
+            {/* Show Join button if player 2 does not exist, else show the cards */}
+            {meta?.player2 && meta?.player2 !== zeroAddress ? (
               // <div className="game-hand-cards">
               getPlayerCards(player2CardEntities).map((card, index) => (
                 <Card
@@ -233,8 +291,8 @@ export const Play: React.FC<Props> = (props) => {
             ) : (
               // </div>
               <Button onClick={() => joinPlayer2()} className="join">
-                {players?.player2 && players?.player2 !== zeroAddress
-                  ? players?.player2
+                {meta?.player2 && meta?.player2 !== zeroAddress
+                  ? meta?.player2
                   : "Join player 2"}
               </Button>
             )}
@@ -247,9 +305,32 @@ export const Play: React.FC<Props> = (props) => {
             <div>Player 1 Field Index (0 to 4): {player1FieldIndex}</div>
             <div>Player 2 Field Index (0 to 4): {player2FieldIndex}</div>
 
-            <Button onClick={() => summonCard(name, Number(player1FieldIndex))}>
+            {/* player1: "address",
+        player2: "address",
+        round: "uint32",
+        turn: "uint8",
+        started: "bool",
+        start_time: "uint256",
+        last_move_time: "uint256",
+        winner: "address", */}
+            <div>player1: {meta?.player1}</div>
+            <div>player2: {meta?.player2}</div>
+            <div>round: {meta?.round}</div>
+            <div>turn: {meta?.turn}</div>
+            <div>started: {meta?.started ? "true" : "false"}</div>
+            <div>start_time: {meta?.start_time}</div>
+            <div>last_move_time: {meta?.last_move_time}</div>
+            <div>winner: {meta?.winner}</div>
+
+            <Button
+              onClick={() =>
+                summonCard(getCurrentSelectedCard(), getCurrentSelectedField())
+              }
+            >
               Summon Card
             </Button>
+
+            <Button onClick={() => startGame()}>Start Game</Button>
             {/* <Button onClick={() => endTurn(name, Number(player1FieldIndex))}>
               End Turn
             </Button>
