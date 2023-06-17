@@ -13,7 +13,7 @@ type Props = {
 const Card: React.FC<Props> = ({ card, onSelectCard, active }) => (
   <div
     className={`card ${active ? "active" : ""}`}
-    onClick={() => onSelectCard(card.name)}
+    onClick={() => onSelectCard(card)}
   >
     <div className="card-inner">
       <div className="card-header">

@@ -164,14 +164,14 @@ export const Play: React.FC<Props> = (props) => {
     return results;
   }
 
-  function onSelectCardP1(cardName: string) {
-    console.log("🚀 | onSelectCard | cardName:", cardName);
-    setPlayer1Card(cardName);
+  function onSelectCardP1(card: game.Card) {
+    console.log("🚀 | onSelectCard | card:", card);
+    setPlayer1Card(card);
   }
 
-  function onSelectCardP2(cardName: string) {
-    console.log("🚀 | onSelectCard | cardName:", cardName);
-    setPlayer2Card(cardName);
+  function onSelectCardP2(card: game.Card) {
+    console.log("🚀 | onSelectCard | card:", card);
+    setPlayer2Card(card);
   }
 
   // Get the Board
@@ -394,7 +394,10 @@ export const Play: React.FC<Props> = (props) => {
 
             <Button
               onClick={() =>
-                summonCard(getCurrentSelectedCard(), getCurrentSelectedField())
+                summonCard(
+                  getCurrentSelectedCard().name,
+                  getCurrentSelectedField()
+                )
               }
             >
               Summon Card
