@@ -28,7 +28,10 @@ const Card: React.FC<Props> = ({ card, onSelectCard, active }) => (
         <img src={card.image} alt="CARD IMAGE" draggable={false}></img>
       </div>
       <div className="card-body">
-        <div className="card-ability">{card.abilityDescription}</div>
+        <div className="card-ability">
+          {card.ability !== undefined ? game.showAbility(card.ability) : []}
+        </div>
+        <div className="card-description">{card.abilityDescription}</div>
       </div>
       <div className="card-footer">
         <div className="card-attack">

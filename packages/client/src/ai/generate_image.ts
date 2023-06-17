@@ -25,7 +25,7 @@ export default async function createImage(prompt: string): Promise<string> {
     apiKey: process.env.dreamstudio_api_key as string,
     width: 512,
     height: 512,
-    // steps: 10,
+    steps: 200,
     engine: 'stable-diffusion-512-v2-1',
     // cfgScale: 10,
     noStore: true, // if set to true, it won't save files to outDir after generation.
