@@ -2,11 +2,17 @@ import { sleep } from "@latticexyz/utils";
 import crypto_bro_png from "../public/crypto_bro.png";
 import fs from "fs";
 import { generate } from 'stability-client'
+import { storeBlobAsNFT } from './upload.js'
 import * as dotenv from 'dotenv'
 dotenv.config()
 
+type ImagePrompt = {
+  name: string,
+  description: string,
+}
+
 // Returns the base64 encoding of generated image.
-export default async function createImage(prompt: string): Promise<string> {
+export default async function createImage(prompt: ImagePrompt): Promise<string> {
   // const { res, images } = await generateAsync({
   //   prompt: 'A Stunning House',
   //   apiKey: process.env.dreamstudio_api_key as string,
@@ -19,14 +25,32 @@ export default async function createImage(prompt: string): Promise<string> {
   //   apiKey: process.env.dreamstudio_api_key as string,
   // })
 
+  // const api = await generate({
+  //   // prompt: `amazing looking room, Dean Norton style`,
+  //   prompt,
+  //   apiKey: process.env.dreamstudio_api_key as string,
+  //   width: 512,
+  //   height: 512,
+  //   steps: 200,
+  //   engine: 'stable-diffusion-512-v2-1',
+  //   // cfgScale: 10,
+  //   noStore: true, // if set to true, it won't save files to outDir after generation.
+  //   samples: 1,
+  //   diffusion: 'ddim',
+
+  //   // // TODO: this doesnt work -- some filesystem-related error i think
+  //   // noStore: false, // if set to true, it won't save files to outDir after generation.
+  //   // outDir: '/output',
+  // })
+
   const api = await generate({
     // prompt: `amazing looking room, Dean Norton style`,
-    prompt,
+    prompt: prompt.description,
     apiKey: process.env.dreamstudio_api_key as string,
-    width: 512,
-    height: 512,
+    width: 128,
+    height: 128,
     steps: 200,
-    engine: 'stable-diffusion-512-v2-1',
+    engine: 'stable-diffusion-v1-5',
     // cfgScale: 10,
     noStore: true, // if set to true, it won't save files to outDir after generation.
     samples: 1,
@@ -39,21 +63,21 @@ export default async function createImage(prompt: string): Promise<string> {
 
   let image: string | undefined
 
-  api.on('image', ({ buffer, filePath }) => {
+  api.on('image', async ({ buffer, filePath }) => {
     console.log('Image', buffer, filePath)
 
     const blob = new Blob([buffer], { type: 'image/png' })
-    if (true) {
-      var reader = new FileReader();
-      reader.readAsDataURL(blob);
-      reader.onloadend = () => {
-        var base64String = reader.result as string;
-        console.log('Base64 String - ', base64String);
-        image = base64String
-      }
-    } else {
-      image = URL.createObjectURL(blob)
-    }
+    const result = await storeBlobAsNFT(blob, prompt.name, prompt.description)
+    console.log(result)
+    image = URL.createObjectURL(new Blob([buffer], { type: 'image/png' }));
+
+    // var reader = new FileReader();
+    // reader.readAsDataURL(blob);
+    // reader.onloadend = () => {
+    //   var base64String = reader.result as string;
+    //   console.log('Base64 String - ', base64String);
+    //   image = base64String
+    // }
 
     // const img = document.createElement('img');
     // img.src = URL.createObjectURL(new Blob([buffer], { type: 'image/png' }));

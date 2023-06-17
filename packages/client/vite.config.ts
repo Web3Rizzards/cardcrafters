@@ -38,6 +38,7 @@ export default defineConfig({
       private_key: process.env.private_key,
       projectId: process.env.projectId,
       dreamstudio_api_key: process.env.dreamstudio_api_key,
+      nftstorage_api_key: process.env.nftstorage_api_key,
     }
   }
 });

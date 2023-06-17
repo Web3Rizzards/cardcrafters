@@ -43,9 +43,9 @@ export async function generateDeck(
   if (true) {
     const names = await generateDeckCardNames(prompt)
     await queueCardGeneration(nextName(), ["offensive"], 'offensive', random(5, 2), random(4, 1))
-    await queueCardGeneration(nextName(), ["defensive"], 'defensive', random(5, 2), random(4, 1))
-    await queueCardGeneration(nextName(), ["control", "skill", "support"], 'skill', random(3, 2), random(4, 3))
-    await queueCardGeneration(nextName(), ["powerful", "leader", "special"], 'special', random(2, 1), random(2, 1));
+    // await queueCardGeneration(nextName(), ["defensive"], 'defensive', random(5, 2), random(4, 1))
+    // await queueCardGeneration(nextName(), ["control", "skill", "support"], 'skill', random(3, 2), random(4, 3))
+    // await queueCardGeneration(nextName(), ["powerful", "leader", "special"], 'special', random(2, 1), random(2, 1));
   } else {
 
     // offensive cards
@@ -106,6 +106,8 @@ export async function generateCard(prompt: CardPrompt): Promise<game.Card> {
     .replaceAll("\"", "")
     .replaceAll("'", "")
     .replaceAll(".", "")
+    .replaceAll("*", "")
+    .replaceAll("_", "")
 
   // console.log("name:", name)
   // if (name.length > 20) {
@@ -130,7 +132,10 @@ export async function generateCard(prompt: CardPrompt): Promise<game.Card> {
     `Write a vivid one-sentence description of the character art for the character "${name}" with theme "${prompt.theme}", attributes ${attributesList}, and character descriptio "${abilityDescription}".`
   );
 
-  const image = await createImage(`${imagePrompt}\n\nhigh quality, high definition, fantasy art, character profile, illustration, trending on ArtStation`)
+  const image = await createImage({
+    name,
+    description: `${imagePrompt}\n\nhigh quality, high definition, fantasy art, character profile, illustration, trending on ArtStation`
+  })
 
   return balance({
     name: `${name}-${random(1000, 100)}`,
@@ -241,7 +246,7 @@ export async function generateTranscriptBody(card1: game.Card, target: GameActio
       const card2 = target.card
       const card1WillKill = card1.attack >= card2.health
       const card2WillKill = card1.attack >= card2.health
-      
+
     }
     case 'player': return await createTextCompletion(`Write a one-sentence vivid exciting dramatic description of how your character, ${card1.name} attacks the enemy player. ${card1.name} has the ability ${card1.abilityDescription}.\n\nReply with ONLY the one-sentence description.`)
   }
