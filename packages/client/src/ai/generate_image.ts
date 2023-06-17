@@ -1,7 +1,9 @@
 import { sleep } from "@latticexyz/utils";
 import crypto_bro_png from "../public/crypto_bro.png";
 import fs from "fs";
-import { generateAsync, generate } from 'stability-client'
+import { generate } from 'stability-client'
+import * as dotenv from 'dotenv'
+dotenv.config()
 
 // Returns the base64 encoding of generated image.
 export default async function createImage(prompt: string): Promise<string> {
@@ -20,9 +22,7 @@ export default async function createImage(prompt: string): Promise<string> {
   const api = await generate({
     // prompt: `amazing looking room, Dean Norton style`,
     prompt,
-    // apiKey: process.env.dreamstudio_api_key as string,
-    // TODO: this key is disabled -- use the new one in the .env
-    apiKey: "sk-zVycyiwCeZtETN80aZJYTo4DNgHPNr5zHnxRAGH8KfouUHTj",
+    apiKey: process.env.dreamstudio_api_key as string,
     width: 512,
     height: 512,
     // steps: 10,
