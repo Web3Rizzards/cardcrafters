@@ -23,6 +23,7 @@
 
 .game-transcript {
   max-height: 20em;
+  max-width: 20em;
   overflow-y: scroll;
 }
 

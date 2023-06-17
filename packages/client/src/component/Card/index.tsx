@@ -31,7 +31,7 @@ const Card: React.FC<Props> = ({ card, onSelectCard, active }) => (
         <div className="card-ability">
           {card.ability !== undefined ? game.showAbility(card.ability) : []}
         </div>
-        <div className="card-description">{card.abilityDescription}</div>
+        <div className="card-description">{card.description}</div>
       </div>
       <div className="card-footer">
         <div className="card-attack">

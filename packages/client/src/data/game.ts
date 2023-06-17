@@ -17,7 +17,7 @@ export type Card = {
   cost: number;
   image: string;
   ability: Ability;
-  abilityDescription: string;
+  description: string;
   attack: number;
   health: number;
 };
@@ -73,7 +73,7 @@ export const exampleCard1: Card = {
   cost: 1,
   image: crypto_bro_image,
   ability: exampleAbility1,
-  abilityDescription: exampleAbilityDescription1,
+  description: exampleAbilityDescription1,
   attack: 1,
   health: 1,
 };

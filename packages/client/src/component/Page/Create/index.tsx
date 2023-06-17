@@ -76,7 +76,7 @@ export const Create: React.FC<Props> = (props) => {
         card.cost,
         ability2Enum(card.ability.case) as number,
         card.ability.amount,
-        card.abilityDescription,
+        card.description,
         card.image
       );
       console.log(`Generated card: ${card.name}`);

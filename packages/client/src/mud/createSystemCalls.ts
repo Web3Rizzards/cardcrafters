@@ -31,9 +31,11 @@ export function createSystemCalls(
     // uint32 cost,
     // AbilityType abilityType,
     // uint32 abilityValue
+    console.log(`creating card with description: ${description}`)
     const tx = await worldSend("createCard", [
       cardName,
-      "description", // TODO
+      // "description",
+      description,
       // "image", //TODO
       image,
       attack,

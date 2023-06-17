@@ -23,7 +23,7 @@ type Props = object;
 //Zero Address
 const zeroAddress = ethers.constants.AddressZero;
 type TranscriptItem = {
-  label: "player-1" | "player-2";
+  label: "player1" | "player2" | "spectator";
   body: string;
 };
 
@@ -99,11 +99,11 @@ export const Play: React.FC<Props> = (props) => {
 
   const [board, setBoard] = useState(game.empty_board);
 
-  // const [transcript, setTranstcript] = useState<TranscriptItem[]>([]);
-  const [transcript, setTranstcript] = useState<TranscriptItem[]>([
-    { label: "player-1", body: "Player 1 joined" },
-    { label: "player-2", body: "Player 2 joined" },
-  ]);
+  const [transcript, setTranstcript] = useState<TranscriptItem[]>([]);
+  // const [transcript, setTranstcript] = useState<TranscriptItem[]>([
+  //   { label: "player1", body: "Player 1 joined" },
+  //   { label: "player2", body: "Player 2 joined" },
+  // ]);
 
   // Get user addr
   const userAddr = getUserAddress(playerEntity);
@@ -233,7 +233,7 @@ export const Play: React.FC<Props> = (props) => {
           <div className="game-transcript">
             {transcript.map((item) => {
               switch (item.label) {
-                case "player-1":
+                case "player1":
                   return (
                     <div className="game-transcript-item game-transcript-item-player1">
                       <div className="game-transcript-item-label">P1</div>
@@ -242,7 +242,7 @@ export const Play: React.FC<Props> = (props) => {
                       </div>
                     </div>
                   );
-                case "player-2":
+                case "player2":
                   return (
                     <div className="game-transcript-item game-transcript-item-player2">
                       <div className="game-transcript-item-label">P2</div>
@@ -254,7 +254,7 @@ export const Play: React.FC<Props> = (props) => {
               }
             })}
           </div>
-          <button
+          {/* <button
             onClick={async (event) => {
               event.preventDefault();
               const card: game.Card = {
@@ -270,11 +270,11 @@ export const Play: React.FC<Props> = (props) => {
                 case: "card",
                 card,
               });
-              setTranstcript([...transcript, { label: "player-1", body }]);
+              setTranstcript([...transcript, { label: "player1", body }]);
             }}
           >
             test add transcript item
-          </button>
+          </button> */}
         </div>
         <div className="game-center">
           {/* Player 1 Hand */}
@@ -293,7 +293,10 @@ export const Play: React.FC<Props> = (props) => {
               ))
             ) : (
               // </div>
-              <Button onClick={() => joinPlayer1()} className="join">
+              <Button onClick={() => {
+                joinPlayer1()
+                setTranstcript([...transcript, { label: "player1", body: "Player 1 joined" }])
+              }} className="join">
                 {meta?.player1 ? meta?.player1 : "Join player 1"}
               </Button>
             )}
@@ -420,7 +423,10 @@ export const Play: React.FC<Props> = (props) => {
               ))
             ) : (
               // </div>
-              <Button onClick={() => joinPlayer2()} className="join">
+              <Button onClick={() => {
+                joinPlayer2()
+                setTranstcript([...transcript, { label: "player2", body: "Player 2 joined" }])
+              }} className="join">
                 {meta?.player2 && meta?.player2 !== zeroAddress
                   ? meta?.player2
                   : "Join player 2"}
@@ -453,12 +459,19 @@ export const Play: React.FC<Props> = (props) => {
             <div>winner: {meta?.winner}</div>
 
             <Button
-              onClick={() =>
-                summonCard(
-                  getCurrentSelectedCard().name,
-                  getCurrentSelectedField()
-                )
-              }
+              onClick={async () => {
+                const player = currentPlayer();
+                const card = getCurrentSelectedCard() as any as game.Card
+
+                summonCard(card.name, getCurrentSelectedField())
+
+                // TODO: get game.Card object from cardName
+                const body = await generateTranscriptBody(card, {
+                  case: "card",
+                  card,
+                });
+                setTranstcript([...transcript, { label: player, body }]);
+              }}
             >
               Summon Card
             </Button>
