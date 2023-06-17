@@ -59,6 +59,18 @@ export const Play: React.FC<Props> = (props) => {
   const counter = useComponentValue(Counter, singletonEntity);
   const players = useComponentValue(Game, singletonEntity);
 
+  const currentPlayer = () => {
+    if (players?.player1.toLowerCase() === getUserAddress(playerEntity)) {
+      return "player1";
+    } else if (
+      players?.player2.toLowerCase() === getUserAddress(playerEntity)
+    ) {
+      return "player2";
+    } else {
+      return "spectator";
+    }
+  };
+
   const [name, setName] = useState("");
   const [player1FieldIndex, setPlayer1FieldIndex] = useState(0);
   const [player2FieldIndex, setPlayer2FieldIndex] = useState(0);
@@ -67,7 +79,6 @@ export const Play: React.FC<Props> = (props) => {
   const [player2Card, setPlayer2Card] = useState(""); // To set with the name of the card
 
   // Get user addr
-
   const userAddr = getUserAddress(playerEntity);
   console.log("🚀 | userAddr:", userAddr);
 
@@ -87,6 +98,17 @@ export const Play: React.FC<Props> = (props) => {
   console.log(players?.player2);
   console.log("🚀 | playerCardEntities:", player1CardEntities);
   console.log("🚀 | playerCardEntities:", player2CardEntities);
+
+  // For SummonCard
+  const getCurrentSelectedField = () => {
+    if (currentPlayer() === "player1") {
+      return Number(player1FieldIndex);
+    } else if (currentPlayer() === "player2") {
+      return Number(player2FieldIndex);
+    } else {
+      return "";
+    }
+  };
 
   function getPlayerCards(playerCardEntities: string[]): game.Card[] {
     const results = playerCardEntities.map((entity) => {
@@ -247,7 +269,9 @@ export const Play: React.FC<Props> = (props) => {
             <div>Player 1 Field Index (0 to 4): {player1FieldIndex}</div>
             <div>Player 2 Field Index (0 to 4): {player2FieldIndex}</div>
 
-            <Button onClick={() => summonCard(name, Number(player1FieldIndex))}>
+            <Button
+              onClick={() => summonCard(player1Card, getCurrentSelectedField())}
+            >
               Summon Card
             </Button>
             {/* <Button onClick={() => endTurn(name, Number(player1FieldIndex))}>
