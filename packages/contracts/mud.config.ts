@@ -21,8 +21,10 @@ export default mudConfig({
       dataStruct: true,
     },
     Board: {
-      keySchema: { player: "address", slot: "uint8" },
+      // keySchema: { player: "address", slot: "uint8" },
       schema: {
+        player: "address",
+        slot: "uint8",
         card: "bytes32",
         attack: "uint32",
         health: "uint32",

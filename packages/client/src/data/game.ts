@@ -1,35 +1,54 @@
-import crypto_bro_image from '../public/crypto_bro.png'
-import Registry, { Id } from './Registry'
+import Registry, { Id } from "./Registry";
+
+import crypto_bro_image from "../public/crypto_bro.png";
 
 export type Game = {
-  cards: Registry<'Card', Card>,
-  player1: Player,
-  player2: Player,
-}
+  cards: Registry<"Card", Card>;
+  player1: Player;
+  player2: Player;
+};
 
 export type Player = {
-  deck: Id<'Card'>[],
-}
+  deck: Id<"Card">[];
+};
 
 export type Card = {
-  name: string,
-  cost: number,
-  imageHref: string,
-  ability: Ability,
-  abilityDescription: string,
-  attack: number,
-  health: number,
-}
+  name: string;
+  cost: number;
+  imageHref: string;
+  ability: Ability;
+  abilityDescription: string;
+  attack: number;
+  health: number;
+};
 
-export type Ability
-  = { case: 'Damage', amount: number }
-  | { case: 'Inspire', amount: number }
-  | { case: 'Heal', amount: number }
-  | { case: 'Weaken', amount: number }
+export type Ability =
+  | { case: "Damage"; amount: number }
+  | { case: "Inspire"; amount: number }
+  | { case: "Heal"; amount: number }
+  | { case: "Weaken"; amount: number };
 
-export const exampleAbility1: Ability = { case: 'Inspire', amount: 2 }
+export type Board = {
+  player1: {
+    0: Card | null;
+    1: Card | null;
+    2: Card | null;
+    3: Card | null;
+    4: Card | null;
+  };
+  player2: {
+    0: Card | null;
+    1: Card | null;
+    2: Card | null;
+    3: Card | null;
+    4: Card | null;
+  };
+};
 
-export const exampleAbilityDescription1: string = "Inspire people with the promised riches of cryptocurency"
+export const exampleAbility1: Ability = { case: "Inspire", amount: 2 };
+
+export const exampleAbilityDescription1 =
+  "Inspire people with the promised riches of cryptocurency";
 
 export const exampleCard1: Card = {
   name: "Crypto Bro #1",
@@ -39,4 +58,9 @@ export const exampleCard1: Card = {
   abilityDescription: exampleAbilityDescription1,
   attack: 1,
   health: 1,
-}
+};
+
+export const empty_board: Board = {
+  player1: { 0: null, 1: null, 2: null, 3: null, 4: null },
+  player2: { 0: null, 1: null, 2: null, 3: null, 4: null },
+};

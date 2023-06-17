@@ -46,6 +46,8 @@ export function defineContractComponents(world: World) {
       return defineComponent(
         world,
         {
+          player: RecsType.String,
+          slot: RecsType.Number,
           card: RecsType.String,
           attack: RecsType.Number,
           health: RecsType.Number,

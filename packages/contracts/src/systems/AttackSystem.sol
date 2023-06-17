@@ -13,23 +13,23 @@ contract AttackSystem is System {
     require(card.creator == _msgSender(), "Must be owner of card");
 
     // Card slot must be empty
-    require(Board.get(_msgSender(), boardId).card == bytes32(0), "Card slot must be empty");
+    require(Board.get(cardId).card == bytes32(0), "Card slot must be empty");
 
     // Board Id must be between 0 and 4
-    require(boardId >= 0 && boardId < 4, "Board Id must be between 0 and 4");
+    require(boardId >= 0 && boardId < 5, "Board Id must be between 0 and 4");
 
-    BoardData memory _board = BoardData({ card: cardId, attack: card.attack, health: card.health, lastAttacked: 0 });
-    Board.set(_msgSender(), boardId, _board);
+    BoardData memory _board = BoardData({
+      player: _msgSender(),
+      slot: boardId,
+      card: cardId,
+      attack: card.attack,
+      health: card.health,
+      lastAttacked: 0
+    });
+    Board.set(cardId, _board);
   }
 
-  // Targets Board
-  /**
-   *
-   * @param boardId the boardId of the card to attack with
-   * @param targetPlayer the player to attack
-   * @param targetBoardId the boardId of the card to attack
-   */
-  function attackCard(uint8 boardId, address targetPlayer, uint8 targetBoardId) public {
+  function attackCard(string memory _attackingCard, string memory _targetCard) public {
     // Can only attack if it is your turn
     address allowedPlayer;
 
@@ -41,8 +41,11 @@ contract AttackSystem is System {
 
     require(allowedPlayer == _msgSender(), "Can only attack if it is your turn");
 
-    BoardData memory attackingCard = Board.get(_msgSender(), boardId);
-    BoardData memory targetCard = Board.get(targetPlayer, targetBoardId);
+    bytes32 attackingCardId = keccak256(bytes(_attackingCard));
+    bytes32 targetCardId = keccak256(bytes(_targetCard));
+
+    BoardData memory attackingCard = Board.get(attackingCardId);
+    BoardData memory targetCard = Board.get(targetCardId);
 
     // attacking card must exist
     require(attackingCard.card.length > 0, "Attacking card must exist");
@@ -60,14 +63,14 @@ contract AttackSystem is System {
     require(attackingCard.lastAttacked != Game.getTurn(), "Can only attack once");
 
     if (attackingCard.attack >= targetCard.health) {
-      Board.setHealth(_msgSender(), boardId, 0);
+      Board.setHealth(targetCardId, 0);
     } else {
-      Board.setHealth(_msgSender(), boardId, targetCard.health - attackingCard.attack);
+      Board.setHealth(targetCardId, targetCard.health - attackingCard.attack);
     }
-    Board.setLastAttacked(_msgSender(), boardId, Game.getTurn());
+    Board.setLastAttacked(attackingCardId, Game.getTurn());
   }
 
-  function attackPlayer(uint8 boardId, address targetPlayer) public {
+  function attackPlayer(string memory _attackingCard, address targetPlayer) public {
     // Can only attack if it is your turn
     address allowedPlayer;
 
@@ -79,7 +82,9 @@ contract AttackSystem is System {
 
     require(allowedPlayer == _msgSender(), "Can only attack if it is your turn");
 
-    BoardData memory attackingCard = Board.get(_msgSender(), boardId);
+    bytes32 attackingCardId = keccak256(bytes(_attackingCard));
+
+    BoardData memory attackingCard = Board.get(attackingCardId);
     PlayerData memory target = Player.get(targetPlayer);
     // attacking card must exist
     require(attackingCard.card.length > 0, "Attacking card must exist");
@@ -95,6 +100,6 @@ contract AttackSystem is System {
     } else {
       Player.setHealth(targetPlayer, target.health - attackingCard.attack);
     }
-    Board.setLastAttacked(_msgSender(), boardId, Game.getTurn());
+    Board.setLastAttacked(attackingCardId, Game.getTurn());
   }
 }

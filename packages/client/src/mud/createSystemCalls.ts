@@ -7,7 +7,7 @@ export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
 export function createSystemCalls(
   { worldSend, txReduced$, singletonEntity }: SetupNetworkResult,
-  { Counter }: ClientComponents
+  { Counter, Game }: ClientComponents
 ) {
   const increment = async () => {
     const tx = await worldSend("increment", []);
@@ -104,6 +104,13 @@ export function createSystemCalls(
     return getComponentValue(Counter, singletonEntity);
   };
 
+  //start game
+  const startGame = async () => {
+    const tx = await worldSend("startGame", []);
+    await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
+    return getComponentValue(Game, singletonEntity);
+  };
+
   return {
     createCard,
     increment,
@@ -115,5 +122,6 @@ export function createSystemCalls(
     attackPlayer,
     forfeit,
     forfeitOpponent,
+    startGame,
   };
 }
