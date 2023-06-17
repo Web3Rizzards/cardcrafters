@@ -228,7 +228,7 @@ export const Play: React.FC<Props> = (props) => {
                   key={index}
                   card={card}
                   onSelectCard={onSelectCardP1}
-                  active={card.name === player1Card}
+                  active={card.name === player1Card.name}
                 ></Card>
               ))
             ) : (
@@ -355,7 +355,7 @@ export const Play: React.FC<Props> = (props) => {
                   key={index}
                   card={card}
                   onSelectCard={onSelectCardP2}
-                  active={card.name === player2Card}
+                  active={card.name === player2Card.name}
                 ></Card>
               ))
             ) : (
