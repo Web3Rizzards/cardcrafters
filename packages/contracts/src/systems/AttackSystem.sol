@@ -39,7 +39,7 @@ contract AttackSystem is System {
       allowedPlayer = Game.getPlayer2();
     }
 
-    require(allowedPlayer == _msgSender(), "Can only attack if it is your turn");
+    // require(allowedPlayer == _msgSender(), "Can only attack if it is your turn");
 
     bytes32 attackingCardId = keccak256(bytes(_attackingCard));
     bytes32 targetCardId = keccak256(bytes(_targetCard));
@@ -60,7 +60,7 @@ contract AttackSystem is System {
     require(targetCard.health > 0, "Attacking card must be still alive");
 
     // Can only attack once
-    require(attackingCard.lastAttacked != Game.getTurn(), "Can only attack once");
+    // require(attackingCard.lastAttacked != Game.getTurn(), "Can only attack once");
 
     if (attackingCard.attack >= targetCard.health) {
       Board.setHealth(targetCardId, 0);
@@ -80,7 +80,7 @@ contract AttackSystem is System {
       allowedPlayer = Game.getPlayer2();
     }
 
-    require(allowedPlayer == _msgSender(), "Can only attack if it is your turn");
+    // require(allowedPlayer == _msgSender(), "Can only attack if it is your turn");
 
     bytes32 attackingCardId = keccak256(bytes(_attackingCard));
 
@@ -93,7 +93,7 @@ contract AttackSystem is System {
     require(attackingCard.health > 0, "Attacking card must be still alive");
 
     // Can only attack once
-    require(attackingCard.lastAttacked != Game.getTurn(), "Can only attack once");
+    // require(attackingCard.lastAttacked != Game.getTurn(), "Can only attack once");
 
     if (attackingCard.attack >= target.health) {
       Player.setHealth(targetPlayer, 0);
