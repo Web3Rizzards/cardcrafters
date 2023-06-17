@@ -47,10 +47,11 @@ export default async function createImage(prompt: ImagePrompt): Promise<string> 
     // prompt: `amazing looking room, Dean Norton style`,
     prompt: prompt.description,
     apiKey: process.env.dreamstudio_api_key as string,
-    width: 128,
-    height: 128,
+    width: 512,
+    height: 512,
     steps: 200,
-    engine: 'stable-diffusion-v1-5',
+    // engine: 'stable-diffusion-v1-5',
+      engine: 'stable-diffusion-512-v2-1',
     // cfgScale: 10,
     noStore: true, // if set to true, it won't save files to outDir after generation.
     samples: 1,
@@ -66,9 +67,11 @@ export default async function createImage(prompt: ImagePrompt): Promise<string> 
   api.on('image', async ({ buffer, filePath }) => {
     console.log('Image', buffer, filePath)
 
-    const blob = new Blob([buffer], { type: 'image/png' })
-    const result = await storeBlobAsNFT(blob, prompt.name, prompt.description)
-    console.log(result)
+    // TODO: doesn't work, says 0bytes size at nft.storage
+    // const blob = new Blob([buffer], { type: 'image/png' })
+    // const result = await storeBlobAsNFT(blob, prompt.name, prompt.description)
+    // console.log(result)
+    
     image = URL.createObjectURL(new Blob([buffer], { type: 'image/png' }));
 
     // var reader = new FileReader();

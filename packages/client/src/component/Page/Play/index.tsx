@@ -383,9 +383,18 @@ export const Play: React.FC<Props> = (props) => {
             <div>winner: {meta?.winner}</div>
 
             <Button
-              onClick={() =>
+              onClick={async () => {
                 summonCard(getCurrentSelectedCard(), getCurrentSelectedField())
-              }
+
+                const cardName = getCurrentSelectedCard()
+                // TODO: get game.Card object from cardName
+                // const card = undefined
+                // const body = await generateTranscriptBody(card, {
+                //   case: "card",
+                //   card,
+                // });
+                // setTranstcript([...transcript, { label: "player-1", body }]);
+              }}
             >
               Summon Card
             </Button>
