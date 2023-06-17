@@ -228,3 +228,21 @@ function balance(card: game.Card): game.Card {
   // calculate the cost of the card based on its ability and attack/health
   return card;
 }
+
+type GameActionTarget
+  = { case: 'card', card: game.Card }
+  | { case: 'player' }
+
+
+export async function generateTranscriptBody(card1: game.Card, target: GameActionTarget): Promise<string> {
+  switch (target.case) {
+    // case 'card': return await createTextCompletion(`Write a one-sentence vivid exciting dramatic description of the epic battle between your character, ${card1.name}, and the enemy character, ${target.card.name}. ${card1.name} has the ability ${card1.abilityDescription}. ${target.card.name} has the ability ${target.card.abilityDescription}.\n\nReply with ONLY the one-sentence description.`)
+    case 'card': {
+      const card2 = target.card
+      const card1WillKill = card1.attack >= card2.health
+      const card2WillKill = card1.attack >= card2.health
+      
+    }
+    case 'player': return await createTextCompletion(`Write a one-sentence vivid exciting dramatic description of how your character, ${card1.name} attacks the enemy player. ${card1.name} has the ability ${card1.abilityDescription}.\n\nReply with ONLY the one-sentence description.`)
+  }
+}

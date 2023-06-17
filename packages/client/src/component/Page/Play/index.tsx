@@ -15,8 +15,16 @@ import { useComponentValue } from "@latticexyz/react";
 import { useEntityQuery } from "@latticexyz/react";
 import { useMUD } from "../../../MUDContext";
 import { useRow } from "@latticexyz/react";
+import { generateTranscriptBody } from "../../../ai/generate";
+
+import crypto_bro_png from '../../../public/crypto_bro.png'
 
 type Props = object;
+
+type TranscriptItem = {
+  label: 'player-1' | 'player-2',
+  body: string
+}
 
 export const Play: React.FC<Props> = (props) => {
   const { controllerState, setControllerState } = useContext(
@@ -63,6 +71,12 @@ export const Play: React.FC<Props> = (props) => {
   const [player1Card, setPlayer1Card] = useState(0);
   const [player2Card, setPlayer2Card] = useState(0);
 
+  // const [transcript, setTranstcript] = useState<TranscriptItem[]>([]);
+  const [transcript, setTranstcript] = useState<TranscriptItem[]>([
+    { label: "player-1", body: "Player 1 joined" },
+    { label: "player-2", body: "Player 2 joined" },
+  ]);
+
   // Get user addr
 
   const userAddr = getUserAddress(playerEntity);
@@ -98,6 +112,44 @@ export const Play: React.FC<Props> = (props) => {
   return (
     <Page.Page name="play">
       <div className="game">
+        <div className="game-sidebar game-rightSidebar">
+          <div className="game-sidebar-title">Battle Transcript</div>
+          <div className="game-transcript">
+            {transcript.map(item => {
+              switch (item.label) {
+                case 'player-1': return (
+                  <div className="game-transcript-item game-transcript-item-player1">
+                    <div className="game-transcript-item-label">P1</div>
+                    <div className="game-transcript-item-body">{item.body}</div>
+                  </div>
+                )
+                case 'player-2': return (
+                  <div className="game-transcript-item game-transcript-item-player2">
+                    <div className="game-transcript-item-label">P2</div>
+                    <div className="game-transcript-item-body">{item.body}</div>
+                  </div>
+                )
+              }
+            })
+            }
+          </div>
+          <button onClick={async event => {
+            event.preventDefault();
+            const card: game.Card = {
+              name: "Google",
+              ability: { case: 'Damage', amount: 1 },
+              abilityDescription: "Deal 1 damage to a target",
+              cost: 1,
+              health: 1,
+              attack: 1,
+              image: crypto_bro_png
+            }
+            const body = await generateTranscriptBody(card, { case: 'card', card });
+            setTranstcript([...transcript, { label: 'player-1', body }])
+          }}>
+            test add transcript item
+          </button>
+        </div>
         <div className="game-center">
           {/* Player 1 Hand */}
           <div className="game-hand game-opponentHand">
