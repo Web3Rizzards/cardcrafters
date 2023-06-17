@@ -4,7 +4,6 @@ import { GoogleAuth } from 'google-auth-library'
 
 import 'dotenv'
 
-/*
 export type Prediction = {
   content: string
 }
@@ -12,8 +11,6 @@ export type Prediction = {
 export type PredictionData = {
   predictions: Prediction[]
 }
-
-console.log(process.env)
 
 const auth = new GoogleAuth({
   credentials: {
@@ -51,9 +48,8 @@ export default async function createTextCompletion(prompt: string): Promise<stri
     return data.predictions[0].content
   }
 }
-*/
 
-export default async function createTextCompletion(prompt: string): Promise<string> {
-  await sleep(500)
-  return "DUMMY"
-}
+// export default async function createTextCompletion(prompt: string): Promise<string> {
+//   await sleep(500)
+//   return "DUMMY"
+// }

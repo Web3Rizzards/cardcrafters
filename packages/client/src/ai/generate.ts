@@ -8,21 +8,6 @@ export type DeckPrompt = {
   theme: string;
 };
 
-async function generateDeckCardNames(prompt: DeckPrompt): Promise<string[]> {
-  return [
-    "Crypto Bro",
-    "Avatar",
-    "NFT",
-    "DAO",
-    "DeFi",
-    "Yield Farming",
-    "Liquidity Pool",
-    "Staking",
-    "Governance",
-    "Smart Contract"
-  ]
-}
-
 export async function generateDeck(
   prompt: DeckPrompt,
   onGenerateCard?: (card: game.Card) => void
@@ -110,16 +95,18 @@ export async function generateCard(prompt: CardPrompt): Promise<game.Card> {
     .map((attr) => `"${attr}"`)
     .join(", ");
 
-  let name = await createTextCompletion(
-    prelude +
-    `Write the name of a new character with theme "${prompt.theme}" and attributes ${attributesList}. Reply with ONLY the character's name as JUST a single phrase.`
-  )
+  // let name = await createTextCompletion(
+  //   prelude +
+  //   `Write the name of a new character with theme "${prompt.theme}" and attributes ${attributesList}. Reply with ONLY the character's name as JUST a single phrase.`
+  // )
 
   // console.log("name:", name)
-  // name = name
-  //   .replaceAll("\"", "")
-  //   .replaceAll("'", "")
-  //   .replaceAll(".", "")
+  const name = prompt.name
+    .trim()
+    .replaceAll("\"", "")
+    .replaceAll("'", "")
+    .replaceAll(".", "")
+
   // console.log("name:", name)
   // if (name.length > 20) {
   //   name = await createTextCompletion(
@@ -148,7 +135,7 @@ export async function generateCard(prompt: CardPrompt): Promise<game.Card> {
   return balance({
     name: `${name}-${random(1000, 100)}`,
     cost: -1,
-    imageHref: image,
+    image: image,
     ability,
     abilityDescription,
     attack: prompt.attack,
@@ -198,11 +185,41 @@ async function generateAbility(type: AbilityType): Promise<game.Ability> {
   }
 }
 
-function parseAbility(abilityString: string): game.Ability {
-  // throw new Error('TODO: parseAbility')
+async function generateDeckCardNames(prompt: DeckPrompt): Promise<string[]> {
+  const prelude = `You are a deckbuilding game designer.\n\n`;
 
-  return game.exampleAbility1;
+  const namesListString = await createTextCompletion(
+    prelude +
+    `Write a bulleted list of character names that are related to the theme "${prompt.theme}". Reply with ONLY the bulleted list.`
+  )
+
+  const namesList = namesListString.split("\n").map(_line => {
+    let line = _line.trim()
+    line = removePrefix(line, "-")
+    line = removePrefix(line, "•")
+    line = removePrefix(line, "*")
+    line = removeSuffix(line, ",")
+    line = removeSuffix(line, ";")
+    return line
+  })
+
+  return namesList
 }
+
+function removePrefix(str: string, prefix: string): string {
+  if (str.startsWith(prefix)) {
+    return str.slice(prefix.length);
+  }
+  return str;
+}
+
+function removeSuffix(str: string, suffix: string): string {
+  if (str.endsWith(suffix)) {
+    return str.slice(0, str.length - suffix.length);
+  }
+  return str;
+}
+
 
 function balance(card: game.Card): game.Card {
   // throw new Error('TODO: balance')

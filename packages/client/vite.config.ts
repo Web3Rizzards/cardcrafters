@@ -37,6 +37,7 @@ export default defineConfig({
       client_email: process.env.client_email,
       private_key: process.env.private_key,
       projectId: process.env.projectId,
+      dreamstudio_api_key: process.env.dreamstudio_api_key,
     }
   }
 });

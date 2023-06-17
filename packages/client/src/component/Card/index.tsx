@@ -18,10 +18,14 @@ const Card: React.FC<Props> = ({ card, onSelectCard, active }) => (
     <div className="card-inner">
       <div className="card-header">
         <div className="card-cost">{card.cost}</div>
-        <div className="card-name">{card.name}</div>
+        <div className="card-name">
+          <div className="card-name-inner">{card.name}</div>
+        </div>
       </div>
       <div className="card-image">
-        <img src={card.imageHref} alt="CARD IMAGE" draggable={false}></img>
+        {/* <img src={card.image} alt="CARD IMAGE" draggable={false}></img> */}
+        {/* <img src={`data:image/png;base64, ${card.image}`} alt="CARD IMAGE" draggable={false}></img> */}
+        <img src={card.image} alt="CARD IMAGE" draggable={false}></img>
       </div>
       <div className="card-body">
         <div className="card-ability">{card.abilityDescription}</div>

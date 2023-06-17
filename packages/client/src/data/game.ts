@@ -15,7 +15,7 @@ export type Player = {
 export type Card = {
   name: string;
   cost: number;
-  imageHref: string;
+  image: string;
   ability: Ability;
   abilityDescription: string;
   attack: number;
@@ -50,17 +50,17 @@ export const exampleAbility1: Ability = { case: "Inspire", amount: 2 };
 export const exampleAbilityDescription1 =
   "Inspire people with the promised riches of cryptocurency";
 
+export const empty_board: Board = {
+  player1: { 0: null, 1: null, 2: null, 3: null, 4: null },
+  player2: { 0: null, 1: null, 2: null, 3: null, 4: null },
+};
+
 export const exampleCard1: Card = {
   name: "Crypto Bro #1",
   cost: 1,
-  imageHref: crypto_bro_image,
+  image: crypto_bro_image,
   ability: exampleAbility1,
   abilityDescription: exampleAbilityDescription1,
   attack: 1,
   health: 1,
-};
-
-export const empty_board: Board = {
-  player1: { 0: null, 1: null, 2: null, 3: null, 4: null },
-  player2: { 0: null, 1: null, 2: null, 3: null, 4: null },
 };
