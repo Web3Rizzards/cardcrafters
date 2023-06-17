@@ -27,6 +27,15 @@ export type Ability
   | { case: 'Heal', amount: number }
   | { case: 'Weaken', amount: number }
 
+export function showAbility(ability: Ability): string {
+  switch (ability.case) {
+    case 'Damage': return `Damage all by ${ability.amount}`
+    case 'Inspire': return `Inspire allies by ${ability.amount}`
+    case 'Heal': return `Heal allies by ${ability.amount}`
+    case 'Weaken': return `Weaken enemies by ${ability.amount}`
+  }
+}
+
 export const exampleAbility1: Ability = { case: 'Inspire', amount: 2 }
 
 export const exampleAbilityDescription1: string = "Inspire people with the promised riches of cryptocurency"

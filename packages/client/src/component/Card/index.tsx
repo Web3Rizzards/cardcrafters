@@ -21,7 +21,8 @@ const Card: React.FC<Props> = (props) => (
         <img src={props.card.image} alt="CARD IMAGE" draggable={false}></img>
       </div>
       <div className="card-body">
-        <div className="card-ability">{props.card.abilityDescription}</div>
+        <div className="card-ability">{game.showAbility(props.card.ability)}</div>
+        <div className="card-description">{props.card.abilityDescription}</div>
       </div>
       <div className="card-footer">
         <div className="card-attack"> <div className="card-attack-inner">{props.card.attack}</div> </div>

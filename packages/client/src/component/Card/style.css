@@ -94,18 +94,34 @@
 }
 
 .card-body {
-  height: 100%;
-  overflow-y: scroll;
+  /* height: 100%; */
+  /* max-height: auto; */
+  height: 6.4em; /* this was very precisely tuned */
+
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items:self-start;
+  gap: 0.5em;
 }
 
 .card-ability {
-  padding: 1em 1em;
+  font-weight: bold;
+  width: 100%;
+  font-size: 70%;
+  text-align: center;
+  /* margin-top: 1em; */
+}
+
+.card-description {
+  /* margin-bottom: 1em; */
+  
+  width: 100%;
   font-size: 70%;
   text-align: center;
   word-break: normal;
+  font-style: italic;
+  overflow-y: scroll;
 }
 
 .card-logo {

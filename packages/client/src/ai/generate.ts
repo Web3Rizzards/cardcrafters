@@ -130,7 +130,7 @@ export async function generateCard(prompt: CardPrompt): Promise<game.Card> {
     `Write a vivid one-sentence description of the character art for the character "${name}" with theme "${prompt.theme}", attributes ${attributesList}, and character descriptio "${abilityDescription}".`
   );
 
-  const image = await createImage(`${imagePrompt}\n\nfantasy art, character profile, illustration, trending on ArtStation, no AI`)
+  const image = await createImage(`${imagePrompt}\n\nhigh quality, high definition, fantasy art, character profile, illustration, trending on ArtStation`)
 
   return balance({
     name: `${name}-${random(1000, 100)}`,
